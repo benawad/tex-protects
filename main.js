@@ -22,7 +22,7 @@ function barGraph(data){
 	};
 
 	var title = {
-		text: 'Child Population vs. Confirmed Victims of Child Abuse/Neglect'
+		text: 'Child Population'
 	};
 
 	var counties = [];
