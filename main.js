@@ -1,6 +1,6 @@
 // read csv
 $.ajax({
-	url: "https://raw.githubusercontent.com/benawad/tex-protects/gh-pages/data.csv?token=AHgfSfaI3i_WoVkZC-_w2bfuTPW6sRiZks5W3KLpwA%3D%3D",
+	url: "https://raw.githubusercontent.com/benawad/tex-protects/gh-pages/data/2015.csv?token=AHgfSUyW-KfikksR2NHJ06AOPsc4pxHrks5W4fOZwA%3D%3D",
     async: true,
     success: function (csvd) {
 				// convert csv to objects
