@@ -1,3 +1,9 @@
+var databook;
+var currentData;
+var currentCounties;
+var currentY;
+var currentType;
+
 // read csv
 $.ajax({
 	url: "https://raw.githubusercontent.com/benawad/tex-protects/gh-pages/data/2015.csv?token=AHgfSW8NH6u1OzPya_bhh7iiSPQ9Qq4Mks5W4vZqwA%3D%3D",
@@ -8,58 +14,80 @@ $.ajax({
     },
     dataType: "text",
     complete: function () {
+			databook = data;
 			// get first five entries
-			var sample = data.slice(0, 5);	
+			currentData = data.slice(0, 5);	
+			currentCounties = []
+			for (var i = 0; i < 5; i++){
+				currentCounties.push(currentData[i].County);		
+			}
 			// make bar graph
-			barGraph(sample);
+			currentType = "Bar";
+			currentY = ["Child Population"];
+			makeGraph(currentData, currentY, currentType);
     }
 });
 
-function barGraph(data){
+function changeY(y){
+	currentY = [y];
+	makeGraph(currentData, currentY, currentType);
+}
 
-	var chart = {
-		type: 'bar'
-	};
+function makeGraph(data, y, type){
+
+	y = y[0];
+
+	console.log(data);
+
+	var x = "County";
+
+  var json = {};
+
+	if (type == "Bar"){
+		var chart = {
+			type: 'bar'
+		};
+		json.chart = chart;
+	} else if (type == "Scatter"){
+		var chart = {
+			type: 'scatter'
+		};
+		json.chart = chart;
+	}
 
 	var title = {
-		text: 'Child Population'
+		text: x + " vs. " + y
 	};
 
-	var counties = [];
-	for(var i = 0; i < 5; i++){
-		counties.push(data[i].County);
+	var xData = [];
+	var yData = [];
+
+	for(var i = 0; i < data.length; i++){
+		xData.push(data[i][x]);
+		yData.push(+data[i][y]);
 	}
 
 	var xAxis = {
 		title:{
-			text: "Counties"
+			text: x
 		},
-		categories: counties
+		categories: xData
 	};
 	var yAxis = {
 		title:{
-			text: "Population"
+			text: y
 		},
 		plotLines: [{
-			 value: 0,
-			 width: 1,
-			 color: '#808080'
+			value: 0,
+			width: 1,
+			color: '#808080'
 		}]
 	};
 
-	var populations = [];
-	
-	for(var i = 0; i < 5; i++){
-		populations.push(+data[i]["Child Population"]);
-	}
-
 	var series = [{
-		data:populations				
+		data: yData				
 	}];
 
-   var json = {};
-
-	 json.chart = chart;
    json.title = title;
    json.xAxis = xAxis;
    json.yAxis = yAxis;
@@ -69,74 +97,43 @@ function barGraph(data){
 
 }
 
-//function bob (data) {
-	//var title = {
-		//text: 'Average Temperatures of Cities'   
-	//};
-	//var subtitle = {
-		//text: 'Source: worldClimate.com'
-	//};
+//Select2
+var countySelect = $(".county-select").select2();
+var columnSelect = $(".column-select").select2();
 
-	//var counties = [];
-	//for(var i = 0; i < 5; i++){
-		//counties.push(data[i].County);
-	//}
+$(function () {
+		//getting click event to show modal
+    $('#edit-graph').click(function () {
+			countySelect.val(currentCounties).trigger("change");
+			columnSelect.val(currentY).trigger("change");
+			$("#myModal").modal('show');
+    });
+});
 
-	//var xAxis = {
-		//categories: counties
-	//};
-	//var yAxis = {
-		//title: {
-			 //text: 'Temperature (\xB0C)'
-		//},
-		//plotLines: [{
-			 //value: 0,
-			 //width: 1,
-			 //color: '#808080'
-		//}]
-	//};   
+function saveChanges(){
+	var counties = $(".county-select").val();
+	currentY = $(".column-select").val();
+	// need at least 1 datapoint
+	if (counties == null){
+		return;
+	}
 
-	//var tooltip = {
-		//valueSuffix: '\xB0C'
-	//}
+	currentData = [];
 
-	//var legend = {
-		//layout: 'vertical',
-		//align: 'right',
-		//verticalAlign: 'middle',
-		//borderWidth: 0
-	//};
-
-	//var populations = [];
+	for (var i = 0; i < databook.length; i++){
+		if (counties.indexOf(databook[i].County) != -1){
+			currentData.push(databook[i]);
+		}
+	}
 	
-	//for(var i = 0; i < 5; i++){
-		//populations.push(+data[i]["Child Population"]);
-	//}
+	if ($("#bar").hasClass("active")){
+		currentType = "Bar";
+	} else if ($("#line").hasClass("active")){
+		currentType = "Line";
+	} else if ($("#scatter").hasClass("active")){
+		currentType = "Scatter";
+	}
 
-	//var series =  [
-		//{
-			 //name: 'Tokyo',
-			 //data: [7.0, 6.9, 9.5, 14.5, 18.2]
-		//}, 
-		//{
-			 //name: 'New York',
-			 //data: [-0.2, 0.8, 5.7, 11.3, 17.0]
-		//},
-		//{
-			 //name: 'London',
-			 //data: [3.9, 4.2, 5.7, 8.5, 11.9]
-		//}
-	//];
-
-	//var json = {};
-
-	//json.title = title;
-	//json.subtitle = subtitle;
-	//json.xAxis = xAxis;
-	//json.yAxis = yAxis;
-	//json.tooltip = tooltip;
-	//json.legend = legend;
-	//json.series = series;
-
-	//$('#container').highcharts(json);
-//}
+	makeGraph(currentData, currentY, currentType);	
+	
+}
