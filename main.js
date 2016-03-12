@@ -6,7 +6,7 @@ var currentType;
 
 // read csv
 $.ajax({
-	url: "https://raw.githubusercontent.com/benawad/tex-protects/gh-pages/data/2015.csv?token=AHgfSW8NH6u1OzPya_bhh7iiSPQ9Qq4Mks5W4vZqwA%3D%3D",
+	url: "./data/2015/0.csv",
     async: true,
     success: function (csvd) {
 				// convert csv to objects
@@ -24,7 +24,8 @@ $.ajax({
 			// make bar graph
 			currentType = "Bar";
 			currentY = ["Child Population"];
-			makeGraph(currentData, currentY, currentType);
+			console.log(data)
+			//makeGraph(currentData, currentY, currentType);
     }
 });
 
