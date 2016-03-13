@@ -1,7 +1,7 @@
 var databook;
-var currentData;
-var currentCounties;
-var currentY;
+var currYData;
+var currXData;
+var currYLabel;
 var currentType;
 
 //Select2
@@ -10,11 +10,30 @@ var columnSelect = null;
 
 $.getJSON("databook.json", function(json){
 	console.log(json);
+	currYLabel = 'Child PopulationAges 0 - 13';
+	var dataObj = json['2015']['Child Day Care Licensing Statistics as of August 31, 2015'][currYLabel]
+	currXData = Object.keys(dataObj);
+	currYData = [];
+	var i = 1;
+	for(var key in dataObj){
+		currYData.push(+dataObj[key]);
+		if (i == 5){
+			break;
+		}
+		i += 1;
+	}
+	currXData = currXData.slice(0, 5);
+	currentType = "bar";
+	makeGraph(currXData, currYData, currYLabel, currentType);
+
 	// fill column dropdown box
 	columnData = []
 	for(var key in json['2015']){
 		objs = [];
 		for (var val in json['2015'][key]){
+			if (val == "Region"){
+				continue;
+			}
 			objs.push({"id":val, "text":val})
 		}
 		columnData.push({"text":key, "children":objs});
@@ -24,38 +43,21 @@ $.getJSON("databook.json", function(json){
 	});
 });
 
-function makeGraph(data, y, type){
-	y = y[0];
-
-	console.log(data);
-
+function makeGraph(xData, yData, yLabel, type){
+	console.log(xData);
+	console.log(yData);
 	var x = "County";
 
   var json = {};
 
-	if (type == "Bar"){
-		var chart = {
-			type: 'bar'
-		};
-		json.chart = chart;
-	} else if (type == "Scatter"){
-		var chart = {
-			type: 'scatter'
-		};
-		json.chart = chart;
-	}
+	var chart = {
+		type:type 
+	};
+	json.chart = chart;
 
 	var title = {
-		text: x + " vs. " + y
+		text: x + " vs. " + yLabel
 	};
-
-	var xData = [];
-	var yData = [];
-
-	for(var i = 0; i < data.length; i++){
-		xData.push(data[i][x]);
-		yData.push(+data[i][y]);
-	}
 
 	var xAxis = {
 		title:{
@@ -65,7 +67,7 @@ function makeGraph(data, y, type){
 	};
 	var yAxis = {
 		title:{
-			text: y
+			text: yLabel
 		},
 		plotLines: [{
 			value: 0,
@@ -89,35 +91,33 @@ function makeGraph(data, y, type){
 $(function () {
 		//getting click event to show modal
     $('#edit-graph').click(function () {
-			countySelect.val(currentCounties).trigger("change");
-			columnSelect.val(currentY).trigger("change");
+			countySelect.val(currXData).trigger("change");
+			columnSelect.val(currYLabel).trigger("change");
 			$("#myModal").modal('show');
     });
 });
 
 function saveChanges(){
 	var counties = $(".county-select").val();
-	currentY = $(".column-select").val();
+	var yLabels = $(".column-select").val();
 	// need at least 1 datapoint
-	if (counties == null){
+	if (counties == null || yLabels == null){
 		return;
 	}
 
-	currentData = [];
+	currXData = counties;
 
-	for (var i = 0; i < databook.length; i++){
-		if (counties.indexOf(databook[i].County) != -1){
-			currentData.push(databook[i]);
-		}
-	}
+	currYData = [];
+
+	console.log(yLabels);
 	
 	if ($("#bar").hasClass("active")){
-		currentType = "Bar";
+		currentType = "bar";
 	} else if ($("#line").hasClass("active")){
-		currentType = "Line";
+		currentType = "line";
 	} else if ($("#scatter").hasClass("active")){
-		currentType = "Scatter";
+		currentType = "scatter";
 	}
 
-	makeGraph(currentData, currentY, currentType);	
+	makeGraph(currXData, currYData, currYLabel, currentType);	
 }
