@@ -10,6 +10,18 @@ var columnSelect = null;
 
 $.getJSON("databook.json", function(json){
 	console.log(json);
+	// fill column dropdown box
+	columnData = []
+	for(var key in json['2015']){
+		objs = [];
+		for (var val in json['2015'][key]){
+			objs.push({"id":val, "text":val})
+		}
+		columnData.push({"text":key, "children":objs});
+	}
+	columnSelect = $(".column-select").select2({
+		data: columnData
+	});
 });
 
 function makeGraph(data, y, type){
