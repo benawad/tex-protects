@@ -1,24 +1,18 @@
-var databook = [];
+var databook;
 var currentData;
 var currentCounties;
 var currentY;
 var currentType;
 
-for(var i = 0; i < 24; i++){
-	// read csv
-	$.ajax({
-		url: "./data/2015/" + i + ".csv",
-			async: true,
-			success: function (csvd) {
-					// convert csv to objects
-					databook.push($.csv.toObjects(csvd));
-			},
-			dataType: "text",
-	});
-}
+//Select2
+var countySelect = $(".county-select").select2();
+var columnSelect = null;
+
+$.getJSON("databook.json", function(json){
+	console.log(json);
+});
 
 function makeGraph(data, y, type){
-
 	y = y[0];
 
 	console.log(data);
@@ -78,12 +72,7 @@ function makeGraph(data, y, type){
    json.series = series;
 
    $('#container').highcharts(json);
-
 }
-
-//Select2
-var countySelect = $(".county-select").select2();
-var columnSelect = $(".column-select").select2();
 
 $(function () {
 		//getting click event to show modal
@@ -119,5 +108,4 @@ function saveChanges(){
 	}
 
 	makeGraph(currentData, currentY, currentType);	
-	
 }
