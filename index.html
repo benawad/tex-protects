@@ -1,668 +1,318 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <link rel="icon" href="bootstrap-deps/favicon.ico">
-
-    <title>Dashboard Template for Bootstrap</title>
-
-		<link href="./custom.css" rel="stylesheet">
-
-    <!-- Bootstrap core CSS -->
-    <link href="bootstrap-deps/bootstrap.min.css" rel="stylesheet">
-
-    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-    <link href="bootstrap-deps/ie10-viewport-bug-workaround.css" rel="stylesheet">
-
-    <!-- Custom styles for this template -->
-    <link href="dashboard.css" rel="stylesheet">
-
-    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
-    <!--[if lt IE 9]>
-      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
-      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-    <![endif]-->
-  </head>
-
-  <body>
-
-    <nav class="navbar navbar-inverse navbar-fixed-top">
-      <div class="container-fluid">
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="navbar-brand" href="#">Tex-Protects</a>
-        </div>
-        <div id="navbar" class="navbar-collapse collapse">
-          <ul class="nav navbar-nav navbar-right">
-            <li><a href="#">Dashboard</a></li>
-            <li><a href="#">Settings</a></li>
-            <li><a href="#">Profile</a></li>
-            <li><a href="#">Help</a></li>
-          </ul>
-          <form class="navbar-form navbar-right">
-            <input type="text" class="form-control" placeholder="Search...">
-          </form>
-        </div>
-      </div>
-    </nav>
-
-    <div class="container-fluid">
-      <div class="row">
-        <div class="col-sm-3 col-md-2 sidebar">
-          <ul class="nav nav-sidebar">
-            <li class="active"><a href="#" onclick="changeY('Child Population')">Overview <span class="sr-only">(current)</span></a></li>
-            <li><a href="#" onclick="changeY('Anglo')">Anglo</a></li>
-            <li><a href="#" onclick="changeY('Asian')">Asian</a></li>
-            <li><a href="#" onclick="changeY('African American')">African American</a></li>
-          </ul>
-          <ul class="nav nav-sidebar">
-            <li><a href="">Nav item</a></li>
-            <li><a href="">Nav item again</a></li>
-            <li><a href="">One more nav</a></li>
-            <li><a href="">Another nav item</a></li>
-            <li><a href="">More navigation</a></li>
-          </ul>
-          <ul class="nav nav-sidebar">
-            <li><a href="">Nav item again</a></li>
-            <li><a href="">One more nav</a></li>
-            <li><a href="">Another nav item</a></li>
-          </ul>
-        </div>
-        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-          <h1 class="page-header">Dashboard</h1>
-
-					<div id="container"></div> 
-
-					<button id="edit-graph" type="button" class="btn btn-default">Edit Graph</button>
-
-					<div id="myModal" class="modal fade">
-						<div class="modal-dialog">
-								<div class="modal-content">
-										<div class="modal-header">
-												<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-												<h4 class="modal-title">Edit Graph</h4>
+	<head>
+	</head>
+	<body>
+		<div class="container-fluid">
+			<button id="edit-graph" type="button" class="btn btn-default">Edit Graph</button>
+			<div id="myModal" class="modal fade">
+				<div class="modal-dialog">
+						<div class="modal-content">
+								<div class="modal-header">
+										<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+										<h4 class="modal-title">Edit Graph</h4>
+								</div>
+								<div class="modal-body">
+									<div class="row">
+										<div class="btn-group graph-type" data-toggle="buttons">
+											<label class="btn btn-primary active" id="bar">
+												<input type="radio" name="options" autocomplete="off" checked> Bar
+											</label>
+											<label class="btn btn-primary" id="line">
+												<input type="radio" name="options" autocomplete="off"> Line
+											</label>
+											<label class="btn btn-primary" id="scatter">
+												<input type="radio" name="options" autocomplete="off"> Scatter
+											</label>
 										</div>
-										<div class="modal-body">
-											<div class="row">
-												<div class="btn-group graph-type" data-toggle="buttons">
-													<label class="btn btn-primary active" id="bar">
-														<input type="radio" name="options" autocomplete="off" checked> Bar
-													</label>
-													<label class="btn btn-primary" id="line">
-														<input type="radio" name="options" autocomplete="off"> Line
-													</label>
-													<label class="btn btn-primary" id="scatter">
-														<input type="radio" name="options" autocomplete="off"> Scatter
-													</label>
-												</div>
-											</div>
-											<div class="row">
-											</div>
-											<div class="row">
-												<select class="county-select" multiple="multiple" style="width: 100%">
-													<option value="ANDERSON">Anderson</option>
-													<option value="ANDREWS">Andrews</option>
-													<option value="ANGELINA">Angelina</option>
-													<option value="ARANSAS">Aransas</option>
-													<option value="ARCHER">Archer</option>
-													<option value="ARMSTRONG">Armstrong</option>
-													<option value="ATASCOSA">Atascosa</option>
-													<option value="AUSTIN">Austin</option>
-													<option value="BAILEY">Bailey</option>
-													<option value="BANDERA">Bandera</option>
-													<option value="BASTROP">Bastrop</option>
-													<option value="BAYLOR">Baylor</option>
-													<option value="BEE">Bee</option>
-													<option value="BELL">Bell</option>
-													<option value="BEXAR">Bexar</option>
-													<option value="BLANCO">Blanco</option>
-													<option value="BORDEN">Borden</option>
-													<option value="BOSQUE">Bosque</option>
-													<option value="BOWIE">Bowie</option>
-													<option value="BRAZORIA">Brazoria</option>
-													<option value="BRAZOS">Brazos</option>
-													<option value="BREWSTER">Brewster</option>
-													<option value="BRISCOE">Briscoe</option>
-													<option value="BROOKS">Brooks</option>
-													<option value="BROWN">Brown</option>
-													<option value="BURLESON">Burleson</option>
-													<option value="BURNET">Burnet</option>
-													<option value="CALDWELL">Caldwell</option>
-													<option value="CALHOUN">Calhoun</option>
-													<option value="CALLAHAN">Callahan</option>
-													<option value="CAMERON">Cameron</option>
-													<option value="CAMP">Camp</option>
-													<option value="CARSON">Carson</option>
-													<option value="CASS">Cass</option>
-													<option value="CASTRO">Castro</option>
-													<option value="CHAMBERS">Chambers</option>
-													<option value="CHEROKEE">Cherokee</option>
-													<option value="CHILDRESS">Childress</option>
-													<option value="CLAY">Clay</option>
-													<option value="COCHRAN">Cochran</option>
-													<option value="COKE">Coke</option>
-													<option value="COLEMAN">Coleman</option>
-													<option value="COLLIN">Collin</option>
-													<option value="COLLINGSWORTH">Collingsworth</option>
-													<option value="COLORADO">Colorado</option>
-													<option value="COMAL">Comal</option>
-													<option value="COMANCHE">Comanche</option>
-													<option value="CONCHO">Concho</option>
-													<option value="COOKE">Cooke</option>
-													<option value="CORYELL">Coryell</option>
-													<option value="COTTLE">Cottle</option>
-													<option value="CRANE">Crane</option>
-													<option value="CROCKETT">Crockett</option>
-													<option value="CROSBY">Crosby</option>
-													<option value="CULBERSON">Culberson</option>
-													<option value="DALLAM">Dallam</option>
-													<option value="DALLAS">Dallas</option>
-													<option value="DAWSON">Dawson</option>
-													<option value="DEAF SMITH">Deaf smith</option>
-													<option value="DELTA">Delta</option>
-													<option value="DENTON">Denton</option>
-													<option value="DEWITT">Dewitt</option>
-													<option value="DICKENS">Dickens</option>
-													<option value="DIMMIT">Dimmit</option>
-													<option value="DONLEY">Donley</option>
-													<option value="DUVAL">Duval</option>
-													<option value="EASTLAND">Eastland</option>
-													<option value="ECTOR">Ector</option>
-													<option value="EDWARDS">Edwards</option>
-													<option value="ELLIS">Ellis</option>
-													<option value="EL PASO">El paso</option>
-													<option value="ERATH">Erath</option>
-													<option value="FALLS">Falls</option>
-													<option value="FANNIN">Fannin</option>
-													<option value="FAYETTE">Fayette</option>
-													<option value="FISHER">Fisher</option>
-													<option value="FLOYD">Floyd</option>
-													<option value="FOARD">Foard</option>
-													<option value="FORT BEND">Fort bend</option>
-													<option value="FRANKLIN">Franklin</option>
-													<option value="FREESTONE">Freestone</option>
-													<option value="FRIO">Frio</option>
-													<option value="GAINES">Gaines</option>
-													<option value="GALVESTON">Galveston</option>
-													<option value="GARZA">Garza</option>
-													<option value="GILLESPIE">Gillespie</option>
-													<option value="GLASSCOCK">Glasscock</option>
-													<option value="GOLIAD">Goliad</option>
-													<option value="GONZALES">Gonzales</option>
-													<option value="GRAY">Gray</option>
-													<option value="GRAYSON">Grayson</option>
-													<option value="GREGG">Gregg</option>
-													<option value="GRIMES">Grimes</option>
-													<option value="GUADALUPE">Guadalupe</option>
-													<option value="HALE">Hale</option>
-													<option value="HALL">Hall</option>
-													<option value="HAMILTON">Hamilton</option>
-													<option value="HANSFORD">Hansford</option>
-													<option value="HARDEMAN">Hardeman</option>
-													<option value="HARDIN">Hardin</option>
-													<option value="HARRIS">Harris</option>
-													<option value="HARRISON">Harrison</option>
-													<option value="HARTLEY">Hartley</option>
-													<option value="HASKELL">Haskell</option>
-													<option value="HAYS">Hays</option>
-													<option value="HEMPHILL">Hemphill</option>
-													<option value="HENDERSON">Henderson</option>
-													<option value="HIDALGO">Hidalgo</option>
-													<option value="HILL">Hill</option>
-													<option value="HOCKLEY">Hockley</option>
-													<option value="HOOD">Hood</option>
-													<option value="HOPKINS">Hopkins</option>
-													<option value="HOUSTON">Houston</option>
-													<option value="HOWARD">Howard</option>
-													<option value="HUDSPETH">Hudspeth</option>
-													<option value="HUNT">Hunt</option>
-													<option value="HUTCHINSON">Hutchinson</option>
-													<option value="IRION">Irion</option>
-													<option value="JACK">Jack</option>
-													<option value="JACKSON">Jackson</option>
-													<option value="JASPER">Jasper</option>
-													<option value="JEFF DAVIS">Jeff davis</option>
-													<option value="JEFFERSON">Jefferson</option>
-													<option value="JIM HOGG">Jim hogg</option>
-													<option value="JIM WELLS">Jim wells</option>
-													<option value="JOHNSON">Johnson</option>
-													<option value="JONES">Jones</option>
-													<option value="KARNES">Karnes</option>
-													<option value="KAUFMAN">Kaufman</option>
-													<option value="KENDALL">Kendall</option>
-													<option value="KENEDY">Kenedy</option>
-													<option value="KENT">Kent</option>
-													<option value="KERR">Kerr</option>
-													<option value="KIMBLE">Kimble</option>
-													<option value="KING">King</option>
-													<option value="KINNEY">Kinney</option>
-													<option value="KLEBERG">Kleberg</option>
-													<option value="KNOX">Knox</option>
-													<option value="LAMAR">Lamar</option>
-													<option value="LAMB">Lamb</option>
-													<option value="LAMPASAS">Lampasas</option>
-													<option value="LA SALLE">La salle</option>
-													<option value="LAVACA">Lavaca</option>
-													<option value="LEE">Lee</option>
-													<option value="LEON">Leon</option>
-													<option value="LIBERTY">Liberty</option>
-													<option value="LIMESTONE">Limestone</option>
-													<option value="LIPSCOMB">Lipscomb</option>
-													<option value="LIVE OAK">Live oak</option>
-													<option value="LLANO">Llano</option>
-													<option value="LOVING">Loving</option>
-													<option value="LUBBOCK">Lubbock</option>
-													<option value="LYNN">Lynn</option>
-													<option value="MADISON">Madison</option>
-													<option value="MARION">Marion</option>
-													<option value="MARTIN">Martin</option>
-													<option value="MASON">Mason</option>
-													<option value="MATAGORDA">Matagorda</option>
-													<option value="MAVERICK">Maverick</option>
-													<option value="MCCULLOCH">Mcculloch</option>
-													<option value="MCLENNAN">Mclennan</option>
-													<option value="MCMULLEN">Mcmullen</option>
-													<option value="MEDINA">Medina</option>
-													<option value="MENARD">Menard</option>
-													<option value="MIDLAND">Midland</option>
-													<option value="MILAM">Milam</option>
-													<option value="MILLS">Mills</option>
-													<option value="MITCHELL">Mitchell</option>
-													<option value="MONTAGUE">Montague</option>
-													<option value="MONTGOMERY">Montgomery</option>
-													<option value="MOORE">Moore</option>
-													<option value="MORRIS">Morris</option>
-													<option value="MOTLEY">Motley</option>
-													<option value="NACOGDOCHES">Nacogdoches</option>
-													<option value="NAVARRO">Navarro</option>
-													<option value="NEWTON">Newton</option>
-													<option value="NOLAN">Nolan</option>
-													<option value="NUECES">Nueces</option>
-													<option value="OCHILTREE">Ochiltree</option>
-													<option value="OLDHAM">Oldham</option>
-													<option value="ORANGE">Orange</option>
-													<option value="PALO PINTO">Palo pinto</option>
-													<option value="PANOLA">Panola</option>
-													<option value="PARKER">Parker</option>
-													<option value="PARMER">Parmer</option>
-													<option value="PECOS">Pecos</option>
-													<option value="POLK">Polk</option>
-													<option value="POTTER">Potter</option>
-													<option value="PRESIDIO">Presidio</option>
-													<option value="RAINS">Rains</option>
-													<option value="RANDALL">Randall</option>
-													<option value="REAGAN">Reagan</option>
-													<option value="REAL">Real</option>
-													<option value="RED RIVER">Red river</option>
-													<option value="REEVES">Reeves</option>
-													<option value="REFUGIO">Refugio</option>
-													<option value="ROBERTS">Roberts</option>
-													<option value="ROBERTSON">Robertson</option>
-													<option value="ROCKWALL">Rockwall</option>
-													<option value="RUNNELS">Runnels</option>
-													<option value="RUSK">Rusk</option>
-													<option value="SABINE">Sabine</option>
-													<option value="SAN AUGUSTINE">San augustine</option>
-													<option value="SAN JACINTO">San jacinto</option>
-													<option value="SAN PATRICIO">San patricio</option>
-													<option value="SAN SABA">San saba</option>
-													<option value="SCHLEICHER">Schleicher</option>
-													<option value="SCURRY">Scurry</option>
-													<option value="SHACKELFORD">Shackelford</option>
-													<option value="SHELBY">Shelby</option>
-													<option value="SHERMAN">Sherman</option>
-													<option value="SMITH">Smith</option>
-													<option value="SOMERVELL">Somervell</option>
-													<option value="STARR">Starr</option>
-													<option value="STEPHENS">Stephens</option>
-													<option value="STERLING">Sterling</option>
-													<option value="STONEWALL">Stonewall</option>
-													<option value="SUTTON">Sutton</option>
-													<option value="SWISHER">Swisher</option>
-													<option value="TARRANT">Tarrant</option>
-													<option value="TAYLOR">Taylor</option>
-													<option value="TERRELL">Terrell</option>
-													<option value="TERRY">Terry</option>
-													<option value="THROCKMORTON">Throckmorton</option>
-													<option value="TITUS">Titus</option>
-													<option value="TOM GREEN">Tom green</option>
-													<option value="TRAVIS">Travis</option>
-													<option value="TRINITY">Trinity</option>
-													<option value="TYLER">Tyler</option>
-													<option value="UPSHUR">Upshur</option>
-													<option value="UPTON">Upton</option>
-													<option value="UVALDE">Uvalde</option>
-													<option value="VAL VERDE">Val verde</option>
-													<option value="VAN ZANDT">Van zandt</option>
-													<option value="VICTORIA">Victoria</option>
-													<option value="WALKER">Walker</option>
-													<option value="WALLER">Waller</option>
-													<option value="WARD">Ward</option>
-													<option value="WASHINGTON">Washington</option>
-													<option value="WEBB">Webb</option>
-													<option value="WHARTON">Wharton</option>
-													<option value="WHEELER">Wheeler</option>
-													<option value="WICHITA">Wichita</option>
-													<option value="WILBARGER">Wilbarger</option>
-													<option value="WILLACY">Willacy</option>
-													<option value="WILLIAMSON">Williamson</option>
-													<option value="WILSON">Wilson</option>
-													<option value="WINKLER">Winkler</option>
-													<option value="WISE">Wise</option>
-													<option value="WOOD">Wood</option>
-													<option value="YOAKUM">Yoakum</option>
-													<option value="YOUNG">Young</option>
-													<option value="ZAPATA">Zapata</option>
-													<option value="ZAVALA">Zavala</option>
-												</select>
-											</div>
-											<div class="row">
-												<select class="column-select" multiple="multiple" style="width: 100%">
-													<option value="County">County</option>
-													<option value="Region">Region</option>
-													<option value="Population Age 18-64 With a Disablilty">Population Age 18-64 With a Disablilty</option>
-													<option value="Population  Ages 65 Plus">Population  Ages 65 Plus</option>
-													<option value="Total APS  Intakes">Total APS  Intakes</option>
-													<option value="Total APS  Completed Investigations">Total APS  Completed Investigations</option>
-													<option value="Validated APS  Investigations">Validated APS  Investigations</option>
-													<option value="Closed Service Delivery Stages*">Closed Service Delivery Stages*</option>
-													<option value="Intakes">Intakes</option>
-													<option value="Completed Investigations">Completed Investigations</option>
-													<option value="Confirmed Investigations">Confirmed Investigations</option>
-													<option value="Total">Total</option>
-													<option value="Hispanic">Hispanic</option>
-													<option value="Anglo">Anglo</option>
-													<option value="African American">African American</option>
-													<option value="Asian">Asian</option>
-													<option value="Other*">Other*</option>
-													<option value="Native American">Native American</option>
-													<option value="Initial Intakes Alleging Abuse/Neglect">Initial Intakes Alleging Abuse/Neglect</option>
-													<option value="Child Abuse/Neglect Reports Assigned for Investigation">Child Abuse/Neglect Reports Assigned for Investigation</option>
-													<option value="CPS Workers Responsible for Intake or Investigation by Office Location">CPS Workers Responsible for Intake or Investigation by Office Location</option>
-													<option value="Total Completed Investigations">Total Completed Investigations</option>
-													<option value="Total Confirmed Investigations">Total Confirmed Investigations</option>
-													<option value="Percent Confirmed Investigations">Percent Confirmed Investigations</option>
-													<option value="Unconfirmed Investigations - Ruled Out">Unconfirmed Investigations - Ruled Out</option>
-													<option value="Unconfirmed Investigations - Unable To Determine">Unconfirmed Investigations - Unable To Determine</option>
-													<option value="Unconfirmed Investigations - Unable To Complete">Unconfirmed Investigations - Unable To Complete</option>
-													<option value="Total Unconfirmed">Total Unconfirmed</option>
-													<option value="Percent Unconfirmed">Percent Unconfirmed</option>
-													<option value="Totals">Totals</option>
-													<option value="Not Open To Services">Not Open To Services</option>
-													<option value="Family Preservation">Family Preservation</option>
-													<option value="Family Subsitute Care*">Family Subsitute Care*</option>
-													<option value="Alleged Victims of Child Abuse/ Neglect">Alleged Victims of Child Abuse/ Neglect</option>
-													<option value="Alleged Victims in Unconfirmed Investigations">Alleged Victims in Unconfirmed Investigations</option>
-													<option value="Alleged Victims in Ruled Out Investigations*">Alleged Victims in Ruled Out Investigations*</option>
-													<option value="Alleged Victims Provided Services**">Alleged Victims Provided Services**</option>
-													<option value="Alleged Victims Not Provided Services**">Alleged Victims Not Provided Services**</option>
-													<option value="Children Removed From Home***">Children Removed From Home***</option>
-													<option value="Child  Population">Child  Population</option>
-													<option value="Confirmed Victims of Child Abuse/ Neglect">Confirmed Victims of Child Abuse/ Neglect</option>
-													<option value="Confirmed Victims of Child Abuse/Neglect per 1000 Children">Confirmed Victims of Child Abuse/Neglect per 1000 Children</option>
-													<option value="Total CPS Completed Investigations">Total CPS Completed Investigations</option>
-													<option value="Confirmed CPS Investigations">Confirmed CPS Investigations</option>
-													<option value="Percent Investigations Confirmed">Percent Investigations Confirmed</option>
-													<option value="Child Abuse/Neglect Related Fatalities">Child Abuse/Neglect Related Fatalities</option>
-													<option value="Child Abuse/Neglect Related Fatalities in Foster Care at Time*">Child Abuse/Neglect Related Fatalities in Foster Care at Time*</option>
-													<option value="Families">Families</option>
-													<option value="Children">Children</option>
-													<option value="Children* Removed From Home">Children* Removed From Home</option>
-													<option value="Percent of Children Removed">Percent of Children Removed</option>
-													<option value="Total Children Served in Fiscal Year 2010">Total Children Served in Fiscal Year 2010</option>
-													<option value="Subsequently Confirmed Victims in Fiscal Years 2010 - 2015">Subsequently Confirmed Victims in Fiscal Years 2010 - 2015</option>
-													<option value="Child Population">Child Population</option>
-													<option value="Children in DFPS Legal Responsibility">Children in DFPS Legal Responsibility</option>
-													<option value="Point Prevalence**">Point Prevalence**</option>
-													<option value="Children Entering Substitute Care">Children Entering Substitute Care</option>
-													<option value="Children in Substitute Care - Relative*">Children in Substitute Care - Relative*</option>
-													<option value="Children in Substitute Care - Non Relative**">Children in Substitute Care - Non Relative**</option>
-													<option value="Children in Foster Care***">Children in Foster Care***</option>
-													<option value="Other *">Other *</option>
-													<option value="Other**">Other**</option>
-													<option value="Family Reunification">Family Reunification</option>
-													<option value="Custody Given to Relative Non-PCA">Custody Given to Relative Non-PCA</option>
-													<option value="Custody Given to Relative PCA">Custody Given to Relative PCA</option>
-													<option value="Non-Relative Adoption">Non-Relative Adoption</option>
-													<option value="Relative Adoption">Relative Adoption</option>
-													<option value="Children Emancipated">Children Emancipated</option>
-													<option value="Other">Other</option>
-													<option value="Relative With PCA">Relative With PCA</option>
-													<option value="Relative Without PCA">Relative Without PCA</option>
-													<option value="Adoption by Relative">Adoption by Relative</option>
-													<option value="Adoption by Non-Relative">Adoption by Non-Relative</option>
-													<option value="Long Term Care - Emancipation">Long Term Care - Emancipation</option>
-													<option value="Long Term Care - Other">Long Term Care - Other</option>
-													<option value="Unique  Children*">Unique  Children*</option>
-													<option value="Possessory CVS">Possessory CVS</option>
-													<option value="TMC**">TMC**</option>
-													<option value="PMC: Not Free  for Adoption">PMC: Not Free  for Adoption</option>
-													<option value="PMC: Free  for Adoption">PMC: Free  for Adoption</option>
-													<option value="Adoption Finalized****">Adoption Finalized****</option>
-													<option value="DFPS Responsibility Terminated***">DFPS Responsibility Terminated***</option>
-													<option value="Foster Homes*">Foster Homes*</option>
-													<option value="Foster/ Adoptive Homes**">Foster/ Adoptive Homes**</option>
-													<option value="Adoptive Homes***">Adoptive Homes***</option>
-													<option value="Children Receiving  In-Home Services">Children Receiving  In-Home Services</option>
-													<option value="Children Receiving In-Home Purchased Services">Children Receiving In-Home Purchased Services</option>
-													<option value="Children in Substitute Care">Children in Substitute Care</option>
-													<option value="Children Receiving Sub-Care Purchased Services">Children Receiving Sub-Care Purchased Services</option>
-													<option value="Children in Foster Care">Children in Foster Care</option>
-													<option value="Children in Paid Foster Care">Children in Paid Foster Care</option>
-													<option value="Child PopulationAges 0 - 13">Child PopulationAges 0 - 13</option>
-													<option value="Licensed Child Care Centers">Licensed Child Care Centers</option>
-													<option value="Total Child Care Centers Capacity">Total Child Care Centers Capacity</option>
-													<option value="Licensed Child Care Homes">Licensed Child Care Homes</option>
-													<option value="Licensed Child Care Homes Capacity">Licensed Child Care Homes Capacity</option>
-													<option value="Listed Family Homes">Listed Family Homes</option>
-													<option value="Registered Child Care Homes">Registered Child Care Homes</option>
-													<option value="Child Population Age 0-17">Child Population Age 0-17</option>
-													<option value="Child Placing  Agencies (CPA)">Child Placing  Agencies (CPA)</option>
-													<option value="Homes  Verified by CPAs">Homes  Verified by CPAs</option>
-													<option value="General Residential Operations">General Residential Operations</option>
-													<option value="Indepent Foster and Group Homes">Indepent Foster and Group Homes</option>
-													<option value="Residential Treatment Centers*">Residential Treatment Centers*</option>
-													<option value="Total Residential">Total Residential</option>
-													<option value="Total Residential Capacity">Total Residential Capacity</option>
-													<option value="TOTALS">TOTALS</option>
-													<option value="STAR*">STAR*</option>
-													<option value="CYD*">CYD*</option>
-													<option value="SYSN*">SYSN*</option>
-													<option value="TFTS">TFTS</option>
-													<option value="CBCAP">CBCAP</option>
-													<option value="HOPES">HOPES</option>
-													<option value="CBFS">CBFS</option>
-													<option value="HIP">HIP</option>
-												</select>
-											</div>	
-										</div>
-										<div class="modal-footer">
-												<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-												<button type="button" class="btn btn-primary" onclick="saveChanges()" data-dismiss="modal">Save changes</button>
-										</div>
+									</div>
+									<div class="row">
+									</div>
+									<div class="row">
+										<select class="county-select" multiple="multiple" style="width: 100%">
+											<option value="ANDERSON">Anderson</option>
+											<option value="ANDREWS">Andrews</option>
+											<option value="ANGELINA">Angelina</option>
+											<option value="ARANSAS">Aransas</option>
+											<option value="ARCHER">Archer</option>
+											<option value="ARMSTRONG">Armstrong</option>
+											<option value="ATASCOSA">Atascosa</option>
+											<option value="AUSTIN">Austin</option>
+											<option value="BAILEY">Bailey</option>
+											<option value="BANDERA">Bandera</option>
+											<option value="BASTROP">Bastrop</option>
+											<option value="BAYLOR">Baylor</option>
+											<option value="BEE">Bee</option>
+											<option value="BELL">Bell</option>
+											<option value="BEXAR">Bexar</option>
+											<option value="BLANCO">Blanco</option>
+											<option value="BORDEN">Borden</option>
+											<option value="BOSQUE">Bosque</option>
+											<option value="BOWIE">Bowie</option>
+											<option value="BRAZORIA">Brazoria</option>
+											<option value="BRAZOS">Brazos</option>
+											<option value="BREWSTER">Brewster</option>
+											<option value="BRISCOE">Briscoe</option>
+											<option value="BROOKS">Brooks</option>
+											<option value="BROWN">Brown</option>
+											<option value="BURLESON">Burleson</option>
+											<option value="BURNET">Burnet</option>
+											<option value="CALDWELL">Caldwell</option>
+											<option value="CALHOUN">Calhoun</option>
+											<option value="CALLAHAN">Callahan</option>
+											<option value="CAMERON">Cameron</option>
+											<option value="CAMP">Camp</option>
+											<option value="CARSON">Carson</option>
+											<option value="CASS">Cass</option>
+											<option value="CASTRO">Castro</option>
+											<option value="CHAMBERS">Chambers</option>
+											<option value="CHEROKEE">Cherokee</option>
+											<option value="CHILDRESS">Childress</option>
+											<option value="CLAY">Clay</option>
+											<option value="COCHRAN">Cochran</option>
+											<option value="COKE">Coke</option>
+											<option value="COLEMAN">Coleman</option>
+											<option value="COLLIN">Collin</option>
+											<option value="COLLINGSWORTH">Collingsworth</option>
+											<option value="COLORADO">Colorado</option>
+											<option value="COMAL">Comal</option>
+											<option value="COMANCHE">Comanche</option>
+											<option value="CONCHO">Concho</option>
+											<option value="COOKE">Cooke</option>
+											<option value="CORYELL">Coryell</option>
+											<option value="COTTLE">Cottle</option>
+											<option value="CRANE">Crane</option>
+											<option value="CROCKETT">Crockett</option>
+											<option value="CROSBY">Crosby</option>
+											<option value="CULBERSON">Culberson</option>
+											<option value="DALLAM">Dallam</option>
+											<option value="DALLAS">Dallas</option>
+											<option value="DAWSON">Dawson</option>
+											<option value="DEAF SMITH">Deaf smith</option>
+											<option value="DELTA">Delta</option>
+											<option value="DENTON">Denton</option>
+											<option value="DEWITT">Dewitt</option>
+											<option value="DICKENS">Dickens</option>
+											<option value="DIMMIT">Dimmit</option>
+											<option value="DONLEY">Donley</option>
+											<option value="DUVAL">Duval</option>
+											<option value="EASTLAND">Eastland</option>
+											<option value="ECTOR">Ector</option>
+											<option value="EDWARDS">Edwards</option>
+											<option value="ELLIS">Ellis</option>
+											<option value="EL PASO">El paso</option>
+											<option value="ERATH">Erath</option>
+											<option value="FALLS">Falls</option>
+											<option value="FANNIN">Fannin</option>
+											<option value="FAYETTE">Fayette</option>
+											<option value="FISHER">Fisher</option>
+											<option value="FLOYD">Floyd</option>
+											<option value="FOARD">Foard</option>
+											<option value="FORT BEND">Fort bend</option>
+											<option value="FRANKLIN">Franklin</option>
+											<option value="FREESTONE">Freestone</option>
+											<option value="FRIO">Frio</option>
+											<option value="GAINES">Gaines</option>
+											<option value="GALVESTON">Galveston</option>
+											<option value="GARZA">Garza</option>
+											<option value="GILLESPIE">Gillespie</option>
+											<option value="GLASSCOCK">Glasscock</option>
+											<option value="GOLIAD">Goliad</option>
+											<option value="GONZALES">Gonzales</option>
+											<option value="GRAY">Gray</option>
+											<option value="GRAYSON">Grayson</option>
+											<option value="GREGG">Gregg</option>
+											<option value="GRIMES">Grimes</option>
+											<option value="GUADALUPE">Guadalupe</option>
+											<option value="HALE">Hale</option>
+											<option value="HALL">Hall</option>
+											<option value="HAMILTON">Hamilton</option>
+											<option value="HANSFORD">Hansford</option>
+											<option value="HARDEMAN">Hardeman</option>
+											<option value="HARDIN">Hardin</option>
+											<option value="HARRIS">Harris</option>
+											<option value="HARRISON">Harrison</option>
+											<option value="HARTLEY">Hartley</option>
+											<option value="HASKELL">Haskell</option>
+											<option value="HAYS">Hays</option>
+											<option value="HEMPHILL">Hemphill</option>
+											<option value="HENDERSON">Henderson</option>
+											<option value="HIDALGO">Hidalgo</option>
+											<option value="HILL">Hill</option>
+											<option value="HOCKLEY">Hockley</option>
+											<option value="HOOD">Hood</option>
+											<option value="HOPKINS">Hopkins</option>
+											<option value="HOUSTON">Houston</option>
+											<option value="HOWARD">Howard</option>
+											<option value="HUDSPETH">Hudspeth</option>
+											<option value="HUNT">Hunt</option>
+											<option value="HUTCHINSON">Hutchinson</option>
+											<option value="IRION">Irion</option>
+											<option value="JACK">Jack</option>
+											<option value="JACKSON">Jackson</option>
+											<option value="JASPER">Jasper</option>
+											<option value="JEFF DAVIS">Jeff davis</option>
+											<option value="JEFFERSON">Jefferson</option>
+											<option value="JIM HOGG">Jim hogg</option>
+											<option value="JIM WELLS">Jim wells</option>
+											<option value="JOHNSON">Johnson</option>
+											<option value="JONES">Jones</option>
+											<option value="KARNES">Karnes</option>
+											<option value="KAUFMAN">Kaufman</option>
+											<option value="KENDALL">Kendall</option>
+											<option value="KENEDY">Kenedy</option>
+											<option value="KENT">Kent</option>
+											<option value="KERR">Kerr</option>
+											<option value="KIMBLE">Kimble</option>
+											<option value="KING">King</option>
+											<option value="KINNEY">Kinney</option>
+											<option value="KLEBERG">Kleberg</option>
+											<option value="KNOX">Knox</option>
+											<option value="LAMAR">Lamar</option>
+											<option value="LAMB">Lamb</option>
+											<option value="LAMPASAS">Lampasas</option>
+											<option value="LA SALLE">La salle</option>
+											<option value="LAVACA">Lavaca</option>
+											<option value="LEE">Lee</option>
+											<option value="LEON">Leon</option>
+											<option value="LIBERTY">Liberty</option>
+											<option value="LIMESTONE">Limestone</option>
+											<option value="LIPSCOMB">Lipscomb</option>
+											<option value="LIVE OAK">Live oak</option>
+											<option value="LLANO">Llano</option>
+											<option value="LOVING">Loving</option>
+											<option value="LUBBOCK">Lubbock</option>
+											<option value="LYNN">Lynn</option>
+											<option value="MADISON">Madison</option>
+											<option value="MARION">Marion</option>
+											<option value="MARTIN">Martin</option>
+											<option value="MASON">Mason</option>
+											<option value="MATAGORDA">Matagorda</option>
+											<option value="MAVERICK">Maverick</option>
+											<option value="MCCULLOCH">Mcculloch</option>
+											<option value="MCLENNAN">Mclennan</option>
+											<option value="MCMULLEN">Mcmullen</option>
+											<option value="MEDINA">Medina</option>
+											<option value="MENARD">Menard</option>
+											<option value="MIDLAND">Midland</option>
+											<option value="MILAM">Milam</option>
+											<option value="MILLS">Mills</option>
+											<option value="MITCHELL">Mitchell</option>
+											<option value="MONTAGUE">Montague</option>
+											<option value="MONTGOMERY">Montgomery</option>
+											<option value="MOORE">Moore</option>
+											<option value="MORRIS">Morris</option>
+											<option value="MOTLEY">Motley</option>
+											<option value="NACOGDOCHES">Nacogdoches</option>
+											<option value="NAVARRO">Navarro</option>
+											<option value="NEWTON">Newton</option>
+											<option value="NOLAN">Nolan</option>
+											<option value="NUECES">Nueces</option>
+											<option value="OCHILTREE">Ochiltree</option>
+											<option value="OLDHAM">Oldham</option>
+											<option value="ORANGE">Orange</option>
+											<option value="PALO PINTO">Palo pinto</option>
+											<option value="PANOLA">Panola</option>
+											<option value="PARKER">Parker</option>
+											<option value="PARMER">Parmer</option>
+											<option value="PECOS">Pecos</option>
+											<option value="POLK">Polk</option>
+											<option value="POTTER">Potter</option>
+											<option value="PRESIDIO">Presidio</option>
+											<option value="RAINS">Rains</option>
+											<option value="RANDALL">Randall</option>
+											<option value="REAGAN">Reagan</option>
+											<option value="REAL">Real</option>
+											<option value="RED RIVER">Red river</option>
+											<option value="REEVES">Reeves</option>
+											<option value="REFUGIO">Refugio</option>
+											<option value="ROBERTS">Roberts</option>
+											<option value="ROBERTSON">Robertson</option>
+											<option value="ROCKWALL">Rockwall</option>
+											<option value="RUNNELS">Runnels</option>
+											<option value="RUSK">Rusk</option>
+											<option value="SABINE">Sabine</option>
+											<option value="SAN AUGUSTINE">San augustine</option>
+											<option value="SAN JACINTO">San jacinto</option>
+											<option value="SAN PATRICIO">San patricio</option>
+											<option value="SAN SABA">San saba</option>
+											<option value="SCHLEICHER">Schleicher</option>
+											<option value="SCURRY">Scurry</option>
+											<option value="SHACKELFORD">Shackelford</option>
+											<option value="SHELBY">Shelby</option>
+											<option value="SHERMAN">Sherman</option>
+											<option value="SMITH">Smith</option>
+											<option value="SOMERVELL">Somervell</option>
+											<option value="STARR">Starr</option>
+											<option value="STEPHENS">Stephens</option>
+											<option value="STERLING">Sterling</option>
+											<option value="STONEWALL">Stonewall</option>
+											<option value="SUTTON">Sutton</option>
+											<option value="SWISHER">Swisher</option>
+											<option value="TARRANT">Tarrant</option>
+											<option value="TAYLOR">Taylor</option>
+											<option value="TERRELL">Terrell</option>
+											<option value="TERRY">Terry</option>
+											<option value="THROCKMORTON">Throckmorton</option>
+											<option value="TITUS">Titus</option>
+											<option value="TOM GREEN">Tom green</option>
+											<option value="TRAVIS">Travis</option>
+											<option value="TRINITY">Trinity</option>
+											<option value="TYLER">Tyler</option>
+											<option value="UPSHUR">Upshur</option>
+											<option value="UPTON">Upton</option>
+											<option value="UVALDE">Uvalde</option>
+											<option value="VAL VERDE">Val verde</option>
+											<option value="VAN ZANDT">Van zandt</option>
+											<option value="VICTORIA">Victoria</option>
+											<option value="WALKER">Walker</option>
+											<option value="WALLER">Waller</option>
+											<option value="WARD">Ward</option>
+											<option value="WASHINGTON">Washington</option>
+											<option value="WEBB">Webb</option>
+											<option value="WHARTON">Wharton</option>
+											<option value="WHEELER">Wheeler</option>
+											<option value="WICHITA">Wichita</option>
+											<option value="WILBARGER">Wilbarger</option>
+											<option value="WILLACY">Willacy</option>
+											<option value="WILLIAMSON">Williamson</option>
+											<option value="WILSON">Wilson</option>
+											<option value="WINKLER">Winkler</option>
+											<option value="WISE">Wise</option>
+											<option value="WOOD">Wood</option>
+											<option value="YOAKUM">Yoakum</option>
+											<option value="YOUNG">Young</option>
+											<option value="ZAPATA">Zapata</option>
+											<option value="ZAVALA">Zavala</option>
+										</select>
+									</div>
+									<div class="row">
+										<select class="column-select" multiple="multiple" style="width: 100%">
+										</select>
+									</div>	
+								</div>
+								<div class="modal-footer">
+										<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+										<button type="button" class="btn btn-primary" onclick="saveChanges()" data-dismiss="modal">Save changes</button>
 								</div>
 						</div>
 				</div>
+			</div>
+		</body>
+	</div>
 
-          <!--<div class="row placeholders">-->
-            <!--<div class="col-xs-6 col-sm-3 placeholder">-->
-              <!--<img src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" width="200" height="200" class="img-responsive" alt="Generic placeholder thumbnail">-->
-              <!--<h4>Label</h4>-->
-              <!--<span class="text-muted">Something else</span>-->
-            <!--</div>-->
-            <!--<div class="col-xs-6 col-sm-3 placeholder">-->
-              <!--<img src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" width="200" height="200" class="img-responsive" alt="Generic placeholder thumbnail">-->
-              <!--<h4>Label</h4>-->
-              <!--<span class="text-muted">Something else</span>-->
-            <!--</div>-->
-            <!--<div class="col-xs-6 col-sm-3 placeholder">-->
-              <!--<img src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" width="200" height="200" class="img-responsive" alt="Generic placeholder thumbnail">-->
-              <!--<h4>Label</h4>-->
-              <!--<span class="text-muted">Something else</span>-->
-            <!--</div>-->
-            <!--<div class="col-xs-6 col-sm-3 placeholder">-->
-              <!--<img src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" width="200" height="200" class="img-responsive" alt="Generic placeholder thumbnail">-->
-              <!--<h4>Label</h4>-->
-              <!--<span class="text-muted">Something else</span>-->
-            <!--</div>-->
-          <!--</div>-->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+	<!-- Latest compiled and minified CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
 
-          <h2 class="sub-header">Section title</h2>
-          <div class="table-responsive">
-            <table class="table table-striped">
-              <thead>
-                <tr>
-                  <th>#</th>
-                  <th>Header</th>
-                  <th>Header</th>
-                  <th>Header</th>
-                  <th>Header</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>1,001</td>
-                  <td>Lorem</td>
-                  <td>ipsum</td>
-                  <td>dolor</td>
-                  <td>sit</td>
-                </tr>
-                <tr>
-                  <td>1,002</td>
-                  <td>amet</td>
-                  <td>consectetur</td>
-                  <td>adipiscing</td>
-                  <td>elit</td>
-                </tr>
-                <tr>
-                  <td>1,003</td>
-                  <td>Integer</td>
-                  <td>nec</td>
-                  <td>odio</td>
-                  <td>Praesent</td>
-                </tr>
-                <tr>
-                  <td>1,003</td>
-                  <td>libero</td>
-                  <td>Sed</td>
-                  <td>cursus</td>
-                  <td>ante</td>
-                </tr>
-                <tr>
-                  <td>1,004</td>
-                  <td>dapibus</td>
-                  <td>diam</td>
-                  <td>Sed</td>
-                  <td>nisi</td>
-                </tr>
-                <tr>
-                  <td>1,005</td>
-                  <td>Nulla</td>
-                  <td>quis</td>
-                  <td>sem</td>
-                  <td>at</td>
-                </tr>
-                <tr>
-                  <td>1,006</td>
-                  <td>nibh</td>
-                  <td>elementum</td>
-                  <td>imperdiet</td>
-                  <td>Duis</td>
-                </tr>
-                <tr>
-                  <td>1,007</td>
-                  <td>sagittis</td>
-                  <td>ipsum</td>
-                  <td>Praesent</td>
-                  <td>mauris</td>
-                </tr>
-                <tr>
-                  <td>1,008</td>
-                  <td>Fusce</td>
-                  <td>nec</td>
-                  <td>tellus</td>
-                  <td>sed</td>
-                </tr>
-                <tr>
-                  <td>1,009</td>
-                  <td>augue</td>
-                  <td>semper</td>
-                  <td>porta</td>
-                  <td>Mauris</td>
-                </tr>
-                <tr>
-                  <td>1,010</td>
-                  <td>massa</td>
-                  <td>Vestibulum</td>
-                  <td>lacinia</td>
-                  <td>arcu</td>
-                </tr>
-                <tr>
-                  <td>1,011</td>
-                  <td>eget</td>
-                  <td>nulla</td>
-                  <td>Class</td>
-                  <td>aptent</td>
-                </tr>
-                <tr>
-                  <td>1,012</td>
-                  <td>taciti</td>
-                  <td>sociosqu</td>
-                  <td>ad</td>
-                  <td>litora</td>
-                </tr>
-                <tr>
-                  <td>1,013</td>
-                  <td>torquent</td>
-                  <td>per</td>
-                  <td>conubia</td>
-                  <td>nostra</td>
-                </tr>
-                <tr>
-                  <td>1,014</td>
-                  <td>per</td>
-                  <td>inceptos</td>
-                  <td>himenaeos</td>
-                  <td>Curabitur</td>
-                </tr>
-                <tr>
-                  <td>1,015</td>
-                  <td>sodales</td>
-                  <td>ligula</td>
-                  <td>in</td>
-                  <td>libero</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-    </div>
+	<!-- Optional theme -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
 
-    <!-- Bootstrap core JavaScript
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
-		<script>window.jQuery || document.write('<script src="bootstrap-deps/jquery.min.js"><\/script>')</script>
-		<script src="https://code.highcharts.com/highcharts.js"></script>
-		<script src="libs/jquery.csv.min.js"></script>
-		<!--Select2-->
-		<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.2-rc.1/css/select2.min.css" rel="stylesheet" />
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.2-rc.1/js/select2.min.js"></script>
-		<script src="main.js"></script>
-		
-    <script src="bootstrap-deps/bootstrap.min.js"></script>
-    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-    <script src="bootstrap-deps/ie10-viewport-bug-workaround.js"></script>
-  </body>
+	<!-- Latest compiled and minified JavaScript -->
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+	<script src="https://code.highcharts.com/highcharts.js"></script>
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.2-rc.1/css/select2.min.css" rel="stylesheet" />
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.2-rc.1/js/select2.min.js"></script>
+	<script src="main.js"></script>
+	<script src="libs/jquery.csv.min.js"></script>
 </html>

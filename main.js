@@ -1,37 +1,20 @@
-var databook;
+var databook = [];
 var currentData;
 var currentCounties;
 var currentY;
 var currentType;
 
-// read csv
-$.ajax({
-	url: "./data/2015/0.csv",
-    async: true,
-    success: function (csvd) {
-				// convert csv to objects
-        data = $.csv.toObjects(csvd);
-    },
-    dataType: "text",
-    complete: function () {
-			databook = data;
-			// get first five entries
-			currentData = data.slice(0, 5);	
-			currentCounties = []
-			for (var i = 0; i < 5; i++){
-				currentCounties.push(currentData[i].County);		
-			}
-			// make bar graph
-			currentType = "Bar";
-			currentY = ["Child Population"];
-			console.log(data)
-			//makeGraph(currentData, currentY, currentType);
-    }
-});
-
-function changeY(y){
-	currentY = [y];
-	makeGraph(currentData, currentY, currentType);
+for(var i = 0; i < 24; i++){
+	// read csv
+	$.ajax({
+		url: "./data/2015/" + i + ".csv",
+			async: true,
+			success: function (csvd) {
+					// convert csv to objects
+					databook.push($.csv.toObjects(csvd));
+			},
+			dataType: "text",
+	});
 }
 
 function makeGraph(data, y, type){
