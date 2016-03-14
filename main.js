@@ -183,14 +183,26 @@ $(function () {
 		//getting click event to show modal
     $('#edit-graph').click(function () {
 			
-			$("#" + graph.yAxis.title.text).prop("checked", true);
-
-			countySelect.val(graph.xAxis.categories).trigger("change");
-			var columns = [];
-			for(var i = 0; i < graph.series.length;i++){
-				columns.push(graph.series[i].name);
+			if(graph.chart.type == "bar"){
+				$("#" + graph.yAxis.title.text).prop("checked", true);
+				countySelect.val(graph.xAxis.categories).trigger("change");
+				var columns = [];
+				for(var i = 0; i < graph.series.length;i++){
+					columns.push(graph.series[i].name);
+				}
+				columnSelect.val(getId(columns)).trigger("change");
+			} else {
+				var years = graph.xAxis.categories;
+				for(var i = 0; i < years.length; i++){
+					$("#" + years[i]).prop("checked", true);
+				}	
+				var counties = [];
+				for(var i = 0; i < graph.series.length; i++){
+					counties.push(graph.series[i].name);
+				}
+				countySelect.val(counties).trigger("change");
+				columnSelect.val(getId([graph.yAxis.title])).trigger("change");
 			}
-			columnSelect.val(getId(columns)).trigger("change");
 			$("#myModal").modal('show');
     });
 });
@@ -210,10 +222,14 @@ function saveChanges(){
 		var years = [];
 		checkboxes.each(function(){years.push(this.id)});
 		graph.xAxis.categories = years;
-		graph.yAxis.title = getValue(columns)[0];
+		graph.yAxis.title.text = getValue(columns)[0];
 		graph.series = createLineSeries(years, counties, getValue(columns)[0]);
+		console.log(graph);
 	}	else {
+		freshGraph();
+		graph.chart.type = "bar";
 		graph.xAxis.categories = counties;
+		graph.xAxis.title.text = "County";
 		graph.yAxis.title.text = checkboxes.attr("id");
 		graph.series = createSeries(getValue(columns));
 	}
