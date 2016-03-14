@@ -1,7 +1,7 @@
 var databook;
 var graph = {
 				chart: {
-            type: 'bar'
+            type: ''
         },
         title: {
             text: ''
@@ -9,7 +9,7 @@ var graph = {
         xAxis: {
             categories: [],
             title: {
-                text: null
+                text: ''
             }
         },
         yAxis: {
@@ -17,23 +17,9 @@ var graph = {
                 text: ''
             }
         },
-        series: [{
-            name: 'Year 1800',
-            data: [107, 31, 635, 203, 2]
-        }, {
-            name: 'Year 1900',
-            data: [133, 156, 947, 408, 6]
-        }, {
-            name: 'Year 2012',
-            data: [1052, 954, 4250, 740, 38]
-        }]
+        series: []
 };	
-
-var currYData;
-var currXData;
-var currYLabel;
-var currentType;
-var currentYear;
+var catDict = {};
 var idDict = {};
 var valDict = {};
 
@@ -47,25 +33,56 @@ function loadCheckboxes(){
 	}
 }
 
+function getData(year, name, counties){
+	var data = [];
+	for(var i = 0; i < counties.length; i++){
+		var datapoint = databook[year][catDict[name]][name][counties[i]];
+		// remove %
+		datapoint = datapoint.replace(/r/g, "");
+		data.push(+datapoint);
+	}
+	return data;
+}
+
+function genCatDict(){
+	for(var cat in databook['2015']){
+		for(var stat in databook['2015'][cat]){
+			catDict[stat] = cat;
+		}
+	}
+}
+
+function createSeries(columns){
+	var series = [];
+	for (var i = 0; i < columns.length; i++){
+		series.push({"name": columns[i], "data": getData(graph.yAxis.title.text, columns[i], graph.xAxis.categories)});
+	}	
+	return series;
+}
+
 $.getJSON("databook.json", function(json){
 	databook = json;
 	loadCheckboxes();
-	currYLabel = ['Child PopulationAges 0 - 13'];
-	currentYear = ['2015']
-	var dataObj = json[currentYear[0]]['Child Day Care Licensing Statistics as of August 31, 2015'][currYLabel[0]]
-	currXData = Object.keys(dataObj);
-	currYData = [];
-	var i = 1;
-	for(var key in dataObj){
-		currYData.push(+dataObj[key]);
-		if (i == 5){
-			break;
-		}
-		i += 1;
-	}
-	currXData = currXData.slice(0, 5);
-	currentType = "bar";
-	makeGraph(currXData, currYData, currYLabel, currentType);
+	genCatDict();
+	var year = "2015";
+	graph.yAxis.title.text = year;
+	graph.xAxis.categories = ["Moore", "Glasscock", "Hall", "Rains", "Nueces"];
+	var columns = ["Hispanic", "Anglo"];
+	graph.xAxis.title.text = "County";
+	graph.series = createSeries(columns);
+	graph.chart.type = "bar";
+	graph.legend = {
+            layout: 'vertical',
+            align: 'right',
+            verticalAlign: 'top',
+            x: -40,
+            y: 80,
+            floating: true,
+            borderWidth: 1,
+            backgroundColor: ((Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF'),
+            shadow: true
+        }
+	genGraph();
 
 	// fill column dropdown box
 	columnData = []
@@ -129,68 +146,6 @@ function radio(elem)
   elem.checked = currentState;
 }
 
-function makeGraph(xData, yData, yLabel, type){
-	console.log(xData);
-	console.log(yData);
-	yLabel = yLabel[0];
-	var x = "County";
-
-  var json = {};
-
-	var chart = {
-		type:type 
-	};
-	json.chart = chart;
-
-	var title = {
-		text: x + " vs. " + yLabel
-	};
-
-	var xAxis = {
-		title:{
-			text: x
-		},
-		categories: xData
-	};
-	var yAxis = {
-		title:{
-			text: yLabel
-		},
-		plotLines: [{
-			value: 0,
-			width: 1,
-			color: '#808080'
-		}]
-	};
-
-	var series = [{
-		data: yData				
-	}];
-
-   json.title = title;
-   json.xAxis = xAxis;
-   json.yAxis = yAxis;
-   json.series = series;
-
-   $('#container').highcharts(json);
-}
-
-function getYData(xData, yLabels){
-	yLabels = yLabels[0];	
-	var label2 = "";
-	for(var key in databook['2015']){
-		if(databook['2015'][key].hasOwnProperty(yLabels)){
-			label2 = key;
-			break;
-		}
-	}
-	yData = [];
-	for(var i = 0; i < xData.length; i++){
-		yData.push(+databook['2015'][label2][yLabels][xData[i]]);	
-	}
-	return yData;
-}
-
 function getId(vals){
 	ids = [];
 	for(var i = 0; i < vals.length; i++){
@@ -210,24 +165,32 @@ function getValue(ids){
 $(function () {
 		//getting click event to show modal
     $('#edit-graph').click(function () {
-			countySelect.val(currXData).trigger("change");
-			columnSelect.val(getId(currYLabel)).trigger("change");
+			
+			$("#" + graph.yAxis.title.text).prop("checked", true);
+
+			countySelect.val(graph.xAxis.categories).trigger("change");
+			var columns = [];
+			for(var i = 0; i < graph.series.length;i++){
+				columns.push(graph.series[i].name);
+			}
+			columnSelect.val(getId(columns)).trigger("change");
 			$("#myModal").modal('show');
     });
 });
 
 function saveChanges(){
 	var counties = $(".county-select").val();
-	var yLabels = $(".column-select").val();
+	var columns = $(".column-select").val();
 	// need at least 1 datapoint
-	if (counties == null || yLabels == null){
+	if (counties == null || columns == null){
 		return;
 	}
 
-	currXData = counties;
+	graph.xAxis.categories = counties;
+	graph.series = createSeries(getValue(columns));
+	genGraph();
+}
 
-	currYLabel = getValue(yLabels);
-	currYData = getYData(currXData, currYLabel);
-
-	makeGraph(currXData, currYData, currYLabel, currentType);	
+function genGraph(){
+	$("#container").highcharts(graph);
 }
