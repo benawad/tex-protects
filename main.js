@@ -1,5 +1,7 @@
 var databook;
-var graph = {
+var graph;
+function freshGraph(){
+	graph = {
 				chart: {
             type: ''
         },
@@ -18,7 +20,10 @@ var graph = {
             }
         },
         series: []
-};	
+	};	
+}
+freshGraph();
+
 var catDict = {};
 var idDict = {};
 var valDict = {};
@@ -29,7 +34,7 @@ var columnSelect = null;
 
 function loadCheckboxes(){
 	for(var year in databook){
-		$("#yearCheckboxes").append("<label class='checkbox-inline'><input type='checkbox' id='" + year + "' value='" + year + "'>" + year + "</label>")
+		$("#yearCheckboxes").append("<label class='checkbox-inline'><input onclick='radio(this);' type='checkbox' id='" + year + "' value='" + year + "'>" + year + "</label>")
 	}
 }
 
@@ -57,6 +62,18 @@ function createSeries(columns){
 	for (var i = 0; i < columns.length; i++){
 		series.push({"name": columns[i], "data": getData(graph.yAxis.title.text, columns[i], graph.xAxis.categories)});
 	}	
+	return series;
+}
+
+function createLineSeries(years, counties, column){
+	var series = [];
+	for(var i = 0; i < counties.length; i++){
+		var datapoints = [];
+		for(var k = 0; k < years.length; k++){
+			datapoints = datapoints.concat(getData(years[k], column, [counties[i]]));
+		}	
+		series.push({"name": counties[i], "data": datapoints});
+	}
 	return series;
 }
 
@@ -185,9 +202,21 @@ function saveChanges(){
 	if (counties == null || columns == null){
 		return;
 	}
-
-	graph.xAxis.categories = counties;
-	graph.series = createSeries(getValue(columns));
+	var checkboxes = $("input[type=checkbox]:checked");
+	if(checkboxes.length > 1){
+		freshGraph()
+		// make line graph
+		graph.chart.type = 'line';
+		var years = [];
+		checkboxes.each(function(){years.push(this.id)});
+		graph.xAxis.categories = years;
+		graph.yAxis.title = getValue(columns)[0];
+		graph.series = createLineSeries(years, counties, getValue(columns)[0]);
+	}	else {
+		graph.xAxis.categories = counties;
+		graph.yAxis.title.text = checkboxes.attr("id");
+		graph.series = createSeries(getValue(columns));
+	}
 	genGraph();
 }
 
