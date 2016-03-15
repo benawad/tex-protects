@@ -100,6 +100,7 @@ $.getJSON("databook.json", function(json){
             shadow: true
         }
 	genGraph();
+	fillTable();
 
 	// fill column dropdown box
 	columnData = []
@@ -182,6 +183,8 @@ function getValue(ids){
 $(function () {
 		//getting click event to show modal
     $('#edit-graph').click(function () {
+			// clear checkboxes
+			$("input[type=checkbox]").each(function(){this.checked = false;});
 			
 			if(graph.chart.type == "bar"){
 				$("#" + graph.yAxis.title.text).prop("checked", true);
@@ -234,6 +237,52 @@ function saveChanges(){
 		graph.series = createSeries(getValue(columns));
 	}
 	genGraph();
+	fillTable();
+}
+
+function fillTable(){
+	var rowData = [];
+	var header = [];
+	var caption = graph.yAxis.title.text;
+	if (graph.chart.type == "bar"){
+		for(var i = 0; i < graph.series.length; i++){
+			header.push(graph.series[i].name);
+		}
+		for(var i = 0; i < graph.xAxis.categories.length; i++){
+			var single = [];
+			single.push(graph.xAxis.categories[i]);
+			for(var k = 0; k < graph.series.length; k++){
+				single.push(graph.series[k].data[i]);
+			}
+			rowData.push(single);
+		}
+	} else {
+		for(var i = 0; i < graph.xAxis.categories.length; i++){
+			header.push(graph.xAxis.categories[i]);
+		}
+		for(var i = 0; i < graph.series.length; i++){
+			var single = [];
+			single.push(graph.series[i].name);
+			single = single.concat(graph.series[i].data);
+			rowData.push(single);
+		}
+	}
+
+	var table = "<table class='table table-striped'><caption>" + caption + "</caption>";
+	table += "<thead><tr>" + "<th>County</th>";
+	for(var i = 0; i < header.length; i++){
+		table += "<th>" + header[i] + "</th>";
+	}
+	table += "</tr></thead><tbody>";
+	for(var i = 0; i < rowData.length; i++){
+		table += "<tr>";
+		for(var k = 0; k < rowData[i].length; k++){
+			table += "<td>" + rowData[i][k] + "</td>";
+		}
+		table += "</tr>";
+	}
+	table += "</tr></tbody></table>";
+	$("table").replaceWith(table);
 }
 
 function genGraph(){
