@@ -80,6 +80,31 @@ function createLineSeries(years, counties, column){
 	return series;
 }
 
+function statTable(){
+	var means = [];
+	var stds = [];
+	var medians = [];
+	var rowLabels = [];
+	var names = [];
+	var data = [];	
+	for(var i = 0; i < graph.series.length; i ++){
+		names.push(graph.series[i].name);
+		data.push(graph.series[i].data);
+	}
+	rowLabels = names;
+	for(var i = 0; i < data.length; i++){
+		means.push(math.mean(data[i]));
+		stds.push(math.std(data[i]));
+		medians.push(math.median(data[i]));
+	}
+	var table = "<table id='stats-table' class='table'><thead><th>Data</th><th>Mean</th><th>Standard Deviation</th><th>Median</th></thead><tbody>";
+	for(var i = 0; i < rowLabels.length; i++){
+		table += "<tr><th>" + rowLabels[i] + "</th><td>" + means[i] + "</td><td>" + stds[i] + "</td><td>" + medians[i] + "</td></tr>";
+	}
+	table += "</tbody></table>";
+	return table;
+}
+
 $.getJSON("databook.json", function(json){
 	databook = json;
 	loadCheckboxes();
@@ -91,19 +116,18 @@ $.getJSON("databook.json", function(json){
 	graph.xAxis.title.text = "County";
 	graph.series = createSeries(columns);
 	graph.chart.type = "bar";
-	graph.legend = {
-            layout: 'vertical',
-            align: 'right',
-            verticalAlign: 'top',
-            x: -40,
-            y: 80,
-            floating: true,
-            borderWidth: 1,
-            backgroundColor: ((Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF'),
-            shadow: true
-        }
+	//graph.legend = {
+						//layout: 'vertical',
+						//align: 'right',
+						//verticalAlign: 'top',
+						////x: -40,
+						////y: 80,
+						//floating: true,
+						//borderWidth: 1,
+						//backgroundColor: ((Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF'),
+						//shadow: true
+				//}
 	genGraph();
-	fillTable();
 
 	// fill column dropdown box
 	columnData = []
@@ -238,7 +262,6 @@ function saveChanges(){
 		graph.series = createSeries(getValue(columns));
 	}
 	genGraph();
-	fillTable();
 }
 
 function fillTable(){
@@ -269,7 +292,7 @@ function fillTable(){
 		}
 	}
 
-	var table = "<table class='table table-striped'><caption>" + caption + "</caption>";
+	var table = "<table id='data-table' class='table table-striped'><caption>" + caption + "</caption>";
 	table += "<thead><tr>" + "<th>County</th>";
 	for(var i = 0; i < header.length; i++){
 		table += "<th>" + header[i] + "</th>";
@@ -283,9 +306,12 @@ function fillTable(){
 		table += "</tr>";
 	}
 	table += "</tr></tbody></table>";
-	$("table").replaceWith(table);
+	$("#data-table").replaceWith(table);
 }
 
 function genGraph(){
 	$("#container").highcharts(graph);
+	console.log(graph)
+	fillTable();
+	$("#stats-table").replaceWith(statTable());
 }
