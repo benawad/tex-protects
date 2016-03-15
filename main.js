@@ -34,6 +34,9 @@ var columnSelect = null;
 
 function loadCheckboxes(){
 	for(var year in databook){
+		if(year == "Region"){
+			continue;
+		}
 		$("#yearCheckboxes").append("<label class='checkbox-inline'><input onclick='radio(this);' type='checkbox' id='" + year + "' value='" + year + "'>" + year + "</label>")
 	}
 }
@@ -147,8 +150,7 @@ $.getJSON("databook.json", function(json){
 	});
 });
 
-function radio(elem)
-{
+function radio(elem){
   var elems = document.getElementsByTagName("input");
   var currentState = elem.checked;
   var elemsLength = elems.length;
@@ -204,7 +206,7 @@ $(function () {
 					counties.push(graph.series[i].name);
 				}
 				countySelect.val(counties).trigger("change");
-				columnSelect.val(getId([graph.yAxis.title])).trigger("change");
+				columnSelect.val(getId([graph.yAxis.title.text])).trigger("change");
 			}
 			$("#myModal").modal('show');
     });
@@ -227,7 +229,6 @@ function saveChanges(){
 		graph.xAxis.categories = years;
 		graph.yAxis.title.text = getValue(columns)[0];
 		graph.series = createLineSeries(years, counties, getValue(columns)[0]);
-		console.log(graph);
 	}	else {
 		freshGraph();
 		graph.chart.type = "bar";
