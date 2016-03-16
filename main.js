@@ -92,10 +92,11 @@ function statTable(){
 		data.push(graph.series[i].data);
 	}
 	rowLabels = names;
+	var dec = 2;
 	for(var i = 0; i < data.length; i++){
-		means.push(math.mean(data[i]));
-		stds.push(math.std(data[i]));
-		medians.push(math.median(data[i]));
+		means.push(math.round(math.mean(data[i]), dec));
+		stds.push(math.round(math.std(data[i]), dec));
+		medians.push(math.round(math.median(data[i]), dec));
 	}
 	var table = "<table id='stats-table' class='table'><thead><th>Data</th><th>Mean</th><th>Standard Deviation</th><th>Median</th></thead><tbody>";
 	for(var i = 0; i < rowLabels.length; i++){
