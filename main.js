@@ -117,17 +117,6 @@ $.getJSON("databook.json", function(json){
 	graph.xAxis.title.text = "County";
 	graph.series = createSeries(columns);
 	graph.chart.type = "bar";
-	//graph.legend = {
-						//layout: 'vertical',
-						//align: 'right',
-						//verticalAlign: 'top',
-						////x: -40,
-						////y: 80,
-						//floating: true,
-						//borderWidth: 1,
-						//backgroundColor: ((Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF'),
-						//shadow: true
-				//}
 	genGraph();
 
 	// fill column dropdown box
@@ -135,10 +124,10 @@ $.getJSON("databook.json", function(json){
 	var i = 0;
 	for(var key in json['2015']){
 		objs = [];
+		if (key.indexOf("APS") != -1){
+			continue;
+		}
 		for (var val in json['2015'][key]){
-			if (val == "Region"){
-				continue;
-			}
 			objs.push({"id":i, "text":val});
 			idDict[val] = i;
 			valDict[i] = val;
@@ -276,6 +265,7 @@ function fillTable(){
 		for(var i = 0; i < graph.xAxis.categories.length; i++){
 			var single = [];
 			single.push(graph.xAxis.categories[i]);
+			single.push(databook["Region"][graph.xAxis.categories[i]]);
 			for(var k = 0; k < graph.series.length; k++){
 				single.push(graph.series[k].data[i]);
 			}
@@ -288,13 +278,14 @@ function fillTable(){
 		for(var i = 0; i < graph.series.length; i++){
 			var single = [];
 			single.push(graph.series[i].name);
+			single.push(databook["Region"][graph.series[i].name]);
 			single = single.concat(graph.series[i].data);
 			rowData.push(single);
 		}
 	}
 
 	var table = "<table id='data-table' class='table table-striped'><caption>" + caption + "</caption>";
-	table += "<thead><tr>" + "<th>County</th>";
+	table += "<thead><tr>" + "<th>County</th><th>Region</th>";
 	for(var i = 0; i < header.length; i++){
 		table += "<th>" + header[i] + "</th>";
 	}
@@ -312,7 +303,6 @@ function fillTable(){
 
 function genGraph(){
 	$("#container").highcharts(graph);
-	console.log(graph)
 	fillTable();
 	$("#stats-table").replaceWith(statTable());
 }
