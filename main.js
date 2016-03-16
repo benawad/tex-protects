@@ -100,7 +100,7 @@ function statTable(){
 	}
 	var table = "<table id='stats-table' class='table'><thead><th>Data</th><th>Mean</th><th>Standard Deviation</th><th>Median</th></thead><tbody>";
 	for(var i = 0; i < rowLabels.length; i++){
-		table += "<tr><th>" + rowLabels[i] + "</th><td>" + means[i] + "</td><td>" + stds[i] + "</td><td>" + medians[i] + "</td></tr>";
+		table += "<tr><td>" + rowLabels[i] + "</td><td>" + means[i] + "</td><td>" + stds[i] + "</td><td>" + medians[i] + "</td></tr>";
 	}
 	table += "</tbody></table>";
 	return table;
