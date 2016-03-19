@@ -1,7 +1,5 @@
 var databook;
-var graph;
-function freshGraph(){
-	graph = {
+var graph = {
 				chart: {
             type: ''
         },
@@ -12,7 +10,14 @@ function freshGraph(){
             categories: [],
             title: {
                 text: ''
-            }
+            },
+						labels: {
+							formatter: function () {
+									return '<a href="#single" onclick="singleCounty(\''+this.value+'\');">' + this.value + '</a>'
+							},
+							useHTML: true
+						}
+
         },
         yAxis: {
             title: {
@@ -21,8 +26,6 @@ function freshGraph(){
         },
         series: []
 	};	
-}
-freshGraph();
 
 var catDict = {};
 var idDict = {};
@@ -235,7 +238,6 @@ function saveChanges(){
 	}
 	var checkboxes = $("input[type=checkbox]:checked");
 	if(checkboxes.length > 1){
-		freshGraph()
 		// make line graph
 		graph.chart.type = 'line';
 		var years = [];
@@ -244,7 +246,6 @@ function saveChanges(){
 		graph.yAxis.title.text = getValue(columns)[0];
 		graph.series = createLineSeries(years, counties, getValue(columns)[0]);
 	}	else {
-		freshGraph();
 		graph.chart.type = "bar";
 		graph.xAxis.categories = counties;
 		graph.xAxis.title.text = "County";
@@ -299,6 +300,10 @@ function fillTable(){
 	}
 	table += "</tr></tbody></table>";
 	$("#data-table").replaceWith(table);
+}
+
+function singleCounty(county){
+	console.log(county);
 }
 
 function genGraph(){
