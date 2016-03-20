@@ -1,4 +1,5 @@
 var databook;
+var finance;
 var graph = {
 				chart: {
             type: ''
@@ -108,6 +109,10 @@ function statTable(){
 	table += "</tbody></table>";
 	return table;
 }
+
+$.getJSON("finance.json", function(json){
+	finance = json;
+});
 
 $.getJSON("databook.json", function(json){
 	databook = json;
@@ -302,8 +307,52 @@ function fillTable(){
 	$("#data-table").replaceWith(table);
 }
 
+function table(data, id, caption){
+	var html = "<table id='"+id+"' class='table'>";
+	if(caption){
+		html += "<caption>" + caption + "</caption>";
+	}
+	html += "<thead><tr>";
+	var keys = Object.keys(data[0]);
+	for(var i = 0; i < keys.length; i++){
+		html += "<th>" + keys[i] + "</th>";	
+	}
+	html += "</tr></thead>";
+	html += "<tbody>";
+	for(var i = 0; i < data.length; i++){
+		html += "<tr>";
+		for(var j = 0; j < keys.length; j++){
+			html += "<td>" + data[i][keys[j]] + "</td>";
+		}
+		html +="</tr>";
+	}
+	html += "</tbody>";
+	html += "</table>";
+	return html;
+}
+
+function getObjValues(obj){
+	var vals = [];
+	for(var i in obj){
+		vals.push(obj[i]);
+	}
+	return vals;
+}
+
 function singleCounty(county){
-	console.log(county);
+	if(finance == null){
+		console.log("Finance is null");
+		$.getJSON("finance.json", function(json){
+			finance = json;
+			singleCounty(county);
+		});
+	} else {
+		$("#single").empty();
+		$("#single").append("<h1>" + county + "</h1>");
+		for(var year in finance){
+			$("#single").append(table(finance[year], "single-finance-"+year, year));
+		}
+	}
 }
 
 function genGraph(){
