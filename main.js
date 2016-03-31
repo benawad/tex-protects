@@ -116,6 +116,7 @@ $.getJSON("finance.json", function(json){
 
 $.getJSON("databook.json", function(json){
 	databook = json;
+	//console.log(databook);
 	loadCheckboxes();
 	genCatDict();
 	var year = "2015";
@@ -331,6 +332,29 @@ function table(data, id, caption){
 	return html;
 }
 
+function arrayToTable(data, id, caption){
+	var html = "<table id='"+id+"' class='table'>";
+	if(caption){
+		html += "<caption>" + caption + "</caption>";
+	}
+	html += "<thead><tr>";
+	for(var i = 0; i < data[0].length; i++){
+		html += "<th>" + data[0][i] + "</th>";	
+	}
+	html += "</tr></thead>";
+	html += "<tbody>";
+	for(var i = 1; i < data.length; i++){
+		html += "<tr>";
+		for(var j = 0; j < data[i].length; j++){
+			html += "<td>" + data[i][j] + "</td>";
+		}
+		html +="</tr>";
+	}
+	html += "</tbody>";
+	html += "</table>";
+	return html;
+}
+
 function getObjValues(obj){
 	var vals = [];
 	for(var i in obj){
@@ -352,8 +376,54 @@ function singleCounty(county){
 		for(var year in finance){
 			$("#single").append(table(finance[year], "single-finance-"+year, year));
 		}
+
+		var header = ["Category"];
+		header = header.concat(Object.keys(databook));
+		var data = [header];
+		for(var y in databook){
+			var row = [];
+			if(y == "Region"){
+				break;
+			}
+			for(var cat in databook[y]){
+				for(var k in databook[y][cat]){
+					//row.push(databook[y][cat][k][county]);
+					row.push(k);
+				}
+			}
+			data.push(row);
+		}
+
+		//console.log(data[1]);
+		//console.log(data[data.length-1]);
+		//console.log(arr_diff(data[1], data[data.length-1]));
+
 	}
+
 }
+
+function arr_diff (a1, a2) {
+
+    var a = [], diff = [];
+
+    for (var i = 0; i < a1.length; i++) {
+        a[a1[i]] = true;
+    }
+
+    for (var i = 0; i < a2.length; i++) {
+        if (a[a2[i]]) {
+            delete a[a2[i]];
+        } else {
+            a[a2[i]] = true;
+        }
+    }
+
+    for (var k in a) {
+        diff.push(k);
+    }
+
+    return diff;
+};
 
 function genGraph(){
 	$("#container").highcharts(graph);
