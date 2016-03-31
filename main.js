@@ -28,7 +28,6 @@ var graph = {
         series: []
 	};	
 
-var catDict = {};
 var idDict = {};
 var valDict = {};
 
@@ -38,36 +37,37 @@ var columnSelect = null;
 
 function loadCheckboxes(){
 	for(var year in databook){
-		if(year == "Region"){
+		if(year == "Region" || year == "Outline"){
 			continue;
 		}
 		$("#yearCheckboxes").append("<label class='checkbox-inline'><input onclick='radio(this);' type='checkbox' id='" + year + "' value='" + year + "'>" + year + "</label>")
 	}
 }
 
-function getData(year, name, counties){
-	var data = [];
-	for(var i = 0; i < counties.length; i++){
-		var datapoint = databook[year][catDict[name]][name][counties[i]];
-		// remove %
-		datapoint = datapoint.replace(/r/g, "");
-		data.push(+datapoint);
-	}
-	return data;
-}
-
-function genCatDict(){
-	for(var cat in databook['2015']){
-		for(var stat in databook['2015'][cat]){
-			catDict[stat] = cat;
+function getObj(year, countyName){
+	for(var i = 0; i < databook[year].length; i++){
+		if(databook[year][i]['County'] == countyName){
+			return databook[year][i];
 		}
 	}
+	return null;
 }
 
 function createSeries(columns){
 	var series = [];
+	var countyObs = [];
+  var counties = graph.xAxis.categories;
+	for (var i = 0; i < counties.length; i++){
+		countyObs.push(getObj(graph.yAxis.title.text, counties[i]));
+	}
 	for (var i = 0; i < columns.length; i++){
-		series.push({"name": columns[i], "data": getData(graph.yAxis.title.text, columns[i], graph.xAxis.categories)});
+		var data = [];
+		for(var c = 0; c < counties.length; c++){
+			var datapoint = countyObs[c][columns[i]];
+			datapoint = datapoint.replace(/r/g, "");
+			data.push(+datapoint);
+		}
+		series.push({"name": columns[i], "data": data});
 	}	
 	return series;
 }
@@ -77,7 +77,10 @@ function createLineSeries(years, counties, column){
 	for(var i = 0; i < counties.length; i++){
 		var datapoints = [];
 		for(var k = 0; k < years.length; k++){
-			datapoints = datapoints.concat(getData(years[k], column, [counties[i]]));
+			var datapoint = getObj(years[k], counties[i])[column];
+			// remove %
+			datapoint = datapoint.replace(/r/g, "");
+			datapoints.push(+datapoint);
 		}	
 		series.push({"name": counties[i], "data": datapoints});
 	}
@@ -116,9 +119,8 @@ $.getJSON("finance.json", function(json){
 
 $.getJSON("databook.json", function(json){
 	databook = json;
-	//console.log(databook);
+	console.log(databook);
 	loadCheckboxes();
-	genCatDict();
 	var year = "2015";
 	graph.yAxis.title.text = year;
 	graph.xAxis.categories = ["Moore", "Glasscock", "Hall", "Rains", "Nueces"];
@@ -129,20 +131,21 @@ $.getJSON("databook.json", function(json){
 	genGraph();
 
 	// fill column dropdown box
-	columnData = []
-	var i = 0;
-	for(var key in json['2015']){
-		objs = [];
-		if (key.indexOf("APS") != -1){
+	columnData = [];
+	id = 0;
+	for (var cat in databook['Outline']){
+		if (cat.indexOf("APS") != -1){
 			continue;
 		}
-		for (var val in json['2015'][key]){
-			objs.push({"id":i, "text":val});
-			idDict[val] = i;
-			valDict[i] = val;
-			i+=1;
+		children = [];
+		for (var i = 0; i < databook['Outline'][cat].length; i++){
+			var val = databook['Outline'][cat][i];
+			children.push({"id":id, "text": val});
+			idDict[val] = id;
+			valDict[id] = val;
+			id += 1;
 		}
-		columnData.push({"text":key, "children":objs});
+		columnData.push({"text":cat, "children":children});
 	}
 	columnSelect = $(".column-select").select2({
 		data: columnData
@@ -332,37 +335,6 @@ function table(data, id, caption){
 	return html;
 }
 
-function arrayToTable(data, id, caption){
-	var html = "<table id='"+id+"' class='table'>";
-	if(caption){
-		html += "<caption>" + caption + "</caption>";
-	}
-	html += "<thead><tr>";
-	for(var i = 0; i < data[0].length; i++){
-		html += "<th>" + data[0][i] + "</th>";	
-	}
-	html += "</tr></thead>";
-	html += "<tbody>";
-	for(var i = 1; i < data.length; i++){
-		html += "<tr>";
-		for(var j = 0; j < data[i].length; j++){
-			html += "<td>" + data[i][j] + "</td>";
-		}
-		html +="</tr>";
-	}
-	html += "</tbody>";
-	html += "</table>";
-	return html;
-}
-
-function getObjValues(obj){
-	var vals = [];
-	for(var i in obj){
-		vals.push(obj[i]);
-	}
-	return vals;
-}
-
 function singleCounty(county){
 	if(finance == null){
 		console.log("Finance is null");
@@ -376,54 +348,8 @@ function singleCounty(county){
 		for(var year in finance){
 			$("#single").append(table(finance[year], "single-finance-"+year, year));
 		}
-
-		var header = ["Category"];
-		header = header.concat(Object.keys(databook));
-		var data = [header];
-		for(var y in databook){
-			var row = [];
-			if(y == "Region"){
-				break;
-			}
-			for(var cat in databook[y]){
-				for(var k in databook[y][cat]){
-					//row.push(databook[y][cat][k][county]);
-					row.push(k);
-				}
-			}
-			data.push(row);
-		}
-
-		//console.log(data[1]);
-		//console.log(data[data.length-1]);
-		//console.log(arr_diff(data[1], data[data.length-1]));
-
 	}
-
 }
-
-function arr_diff (a1, a2) {
-
-    var a = [], diff = [];
-
-    for (var i = 0; i < a1.length; i++) {
-        a[a1[i]] = true;
-    }
-
-    for (var i = 0; i < a2.length; i++) {
-        if (a[a2[i]]) {
-            delete a[a2[i]];
-        } else {
-            a[a2[i]] = true;
-        }
-    }
-
-    for (var k in a) {
-        diff.push(k);
-    }
-
-    return diff;
-};
 
 function genGraph(){
 	$("#container").highcharts(graph);
