@@ -364,7 +364,7 @@ function singleCounty(){
 			rows.push(arr);
 		}
 		var pdf = new jsPDF('p','pt');
-		pdf.autoTable(cols, rows);
+		pdf.autoTable(cols, rows, {'styles':{'overflow':'linebreak'}});
 		pdf.save('table.pdf');
 	}
 }
