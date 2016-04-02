@@ -11,14 +11,7 @@ var graph = {
             categories: [],
             title: {
                 text: ''
-            },
-						labels: {
-							formatter: function () {
-									return '<a href="#single" onclick="singleCounty(\''+this.value+'\');">' + this.value + '</a>'
-							},
-							useHTML: true
-						}
-
+            }
         },
         yAxis: {
             title: {
@@ -53,6 +46,14 @@ function getObj(year, countyName){
 	return null;
 }
 
+function getProp(obj, name){
+	if(obj.hasOwnProperty(name)){
+		return obj[name];	
+	} else {
+		return null;
+	}
+}
+
 function createSeries(columns){
 	var series = [];
 	var countyObs = [];
@@ -63,9 +64,13 @@ function createSeries(columns){
 	for (var i = 0; i < columns.length; i++){
 		var data = [];
 		for(var c = 0; c < counties.length; c++){
-			var datapoint = countyObs[c][columns[i]];
-			datapoint = datapoint.replace(/r/g, "");
-			data.push(+datapoint);
+			var datapoint = getProp(countyObs[c], columns[i]);
+			if(datapoint != null){
+				datapoint = datapoint.replace(/r/g, "");
+				data.push(+datapoint);
+			} else {
+				data.push(null);
+			}
 		}
 		series.push({"name": columns[i], "data": data});
 	}	
@@ -77,10 +82,13 @@ function createLineSeries(years, counties, column){
 	for(var i = 0; i < counties.length; i++){
 		var datapoints = [];
 		for(var k = 0; k < years.length; k++){
-			var datapoint = getObj(years[k], counties[i])[column];
-			// remove %
-			datapoint = datapoint.replace(/r/g, "");
-			datapoints.push(+datapoint);
+			var datapoint = getProp(getObj(years[k], counties[i]), [column])
+			if(datapoint != null){
+				datapoint = datapoint.replace(/r/g, "");
+				datapoints.push(+datapoint);
+			} else {
+				datapoints.push(null);
+			}
 		}	
 		series.push({"name": counties[i], "data": datapoints});
 	}
@@ -91,6 +99,7 @@ function statTable(){
 	var means = [];
 	var stds = [];
 	var medians = [];
+	var modes = [];
 	var rowLabels = [];
 	var names = [];
 	var data = [];	
@@ -104,10 +113,11 @@ function statTable(){
 		means.push(math.round(math.mean(data[i]), dec));
 		stds.push(math.round(math.std(data[i]), dec));
 		medians.push(math.round(math.median(data[i]), dec));
+		modes.push(math.mode(data[i]).toString());
 	}
-	var table = "<table id='stats-table' class='table'><thead><th>Data</th><th>Mean</th><th>Standard Deviation</th><th>Median</th></thead><tbody>";
+	var table = "<table id='stats-table' class='table'><thead><th>Data</th><th>Mean</th><th>Standard Deviation</th><th>Median</th><th>Mode</th></thead><tbody>";
 	for(var i = 0; i < rowLabels.length; i++){
-		table += "<tr><td>" + rowLabels[i] + "</td><td>" + means[i] + "</td><td>" + stds[i] + "</td><td>" + medians[i] + "</td></tr>";
+		table += "<tr><td>" + rowLabels[i] + "</td><td>" + means[i] + "</td><td>" + stds[i] + "</td><td>" + medians[i] + "</td><td>" + modes[i] + "</td></tr>";
 	}
 	table += "</tbody></table>";
 	return table;
@@ -335,19 +345,27 @@ function table(data, id, caption){
 	return html;
 }
 
-function singleCounty(county){
+function singleCounty(){
+
 	if(finance == null){
 		console.log("Finance is null");
 		$.getJSON("finance.json", function(json){
 			finance = json;
-			singleCounty(county);
+			singleCounty();
 		});
 	} else {
-		$("#single").empty();
-		$("#single").append("<h1>" + county + "</h1>");
-		for(var year in finance){
-			$("#single").append(table(finance[year], "single-finance-"+year, year));
+		cols = Object.keys(finance[0]);
+		rows = [];
+		for (var i = 0; i < finance.length; i++){
+			var arr = [];
+			for(k in finance[i]){
+				arr.push(finance[i][k]);
+			}
+			rows.push(arr);
 		}
+		var pdf = new jsPDF('p','pt');
+		pdf.autoTable(cols, rows);
+		pdf.save('table.pdf');
 	}
 }
 

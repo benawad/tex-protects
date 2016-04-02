@@ -9,6 +9,7 @@
 			<img src="https://texprotects.org/media/images/texprotects.png">
 			<div id="container"></div>
 			<button id="edit-graph" type="button" class="btn btn-default">Edit Graph</button>
+			<button id="save-graph" type="button" class="btn btn-default" onclick="singleCounty();">Save</button>
 			<table id="stats-table"></table>
 			<div id="myModal" class="modal fade">
 				<div class="modal-dialog">
@@ -293,9 +294,6 @@
 			</div>
 			<table id='data-table' class="table table-striped">
 			</table>
-			<div id="single">
-				<h1 id="single-county-name"></h1>	
-			</div>
 		</div>
 
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
@@ -310,7 +308,10 @@
 		<script src="https://code.highcharts.com/highcharts.js"></script>
 		<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.2-rc.1/css/select2.min.css" rel="stylesheet" />
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.2-rc.1/js/select2.min.js"></script>
+		<script type="text/javascript" src="libs/jspdf.min.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/3.0.0/math.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/2.0.16/jspdf.plugin.autotable.js"></script>
+		<script src="http://code.highcharts.com/modules/exporting.js"></script>
 		<script src="main.js"></script>
 	</body>
 </html>
