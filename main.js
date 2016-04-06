@@ -66,7 +66,7 @@ function createSeries(columns){
 		for(var c = 0; c < counties.length; c++){
 			var datapoint = getProp(countyObs[c], columns[i]);
 			if(datapoint != null){
-				datapoint = datapoint.replace(/r/g, "");
+				datapoint = datapoint.replace(/%/g, "");
 				data.push(+datapoint);
 			} else {
 				data.push(null);
@@ -84,7 +84,7 @@ function createLineSeries(years, counties, column){
 		for(var k = 0; k < years.length; k++){
 			var datapoint = getProp(getObj(years[k], counties[i]), [column])
 			if(datapoint != null){
-				datapoint = datapoint.replace(/r/g, "");
+				datapoint = datapoint.replace(/%/g, "");
 				datapoints.push(+datapoint);
 			} else {
 				datapoints.push(null);
