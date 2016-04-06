@@ -129,7 +129,6 @@ $.getJSON("finance.json", function(json){
 
 $.getJSON("databook.json", function(json){
 	databook = json;
-	console.log(databook);
 	loadCheckboxes();
 	var year = "2015";
 	graph.yAxis.title.text = year;
