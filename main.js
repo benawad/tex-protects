@@ -344,6 +344,58 @@ function table(data, id, caption){
 	return html;
 }
 
+function urlToUri(url, callback){
+    var img = new Image();
+    img.crossOrigin = 'Anonymous';
+    img.onload = function(){
+        var canvas = document.createElement('CANVAS');
+        var ctx = canvas.getContext('2d');
+        var dataURL;
+        canvas.height = this.height;
+        canvas.width = this.width;
+        ctx.drawImage(this, 0, 0);
+        dataURL = canvas.toDataURL("JPEG");
+        callback(dataURL);
+        canvas = null; 
+    };
+    img.src = url;
+}
+
+function makepdf(table){
+	var exportUrl = 'http://export.highcharts.com/';
+	var optionsStr = JSON.stringify(graph);
+  dataString = encodeURI('async=true&type=SVG&width=500&options=' + optionsStr);
+	$.ajax({
+			type: 'POST',
+			data: dataString,
+			url: exportUrl,
+			success: function (data) {
+					var url = exportUrl + data;
+					urlToUri(url, function(uri){
+						var docDefinition = {
+							content: [
+								{
+									image:uri,
+									width:500
+								},
+								{
+									table: {
+										//headerRows: 1,
+										//widths: [ '*', 'auto', 100, '*' ],
+										body: rows
+									}
+								}
+							] 
+						};
+						pdfMake.createPdf(docDefinition).open();
+					});
+			},
+			error: function (err) {
+					console.log('error', err.statusText);
+			}
+	});
+}
+
 function singleCounty(){
 
 	if(finance == null){
@@ -362,9 +414,8 @@ function singleCounty(){
 			}
 			rows.push(arr);
 		}
-		var pdf = new jsPDF('p','pt');
-		pdf.autoTable(cols, rows, {'styles':{'overflow':'linebreak'}});
-		pdf.save('table.pdf');
+		rows.splice(0, 0, cols);
+		makepdf(rows);
 	}
 }
 
