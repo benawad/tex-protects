@@ -69,7 +69,7 @@ function createSeries(columns){
 		var data = [];
 		for(var c = 0; c < counties.length; c++){
 			var datapoint = getProp(countyObs[c], columns[i]);
-			if(datapoint != null){
+			if(!isNaN(datapoint)){
 				datapoint = datapoint.replace(/%/g, "");
 				data.push(+datapoint);
 			} else {
@@ -87,7 +87,7 @@ function createLineSeries(years, counties, column){
 		var datapoints = [];
 		for(var k = 0; k < years.length; k++){
 			var datapoint = getProp(getObj(years[k], counties[i]), [column])
-			if(datapoint != null){
+			if(!isNaN(datapoint)){
 				datapoint = datapoint.replace(/%/g, "");
 				datapoints.push(+datapoint);
 			} else {
@@ -115,8 +115,8 @@ function statTable(){
 	var dec = 2;
 	for(var i = 0; i < data.length; i++){
 		means.push(math.round(math.mean(data[i]), dec));
-		stds.push(math.round(math.std(data[i]), dec));
-		medians.push(math.round(math.median(data[i]), dec));
+		stds.push(math.round(math.mean(data[i]), dec));
+		medians.push(math.round(math.mean(data[i]), dec));
 		modes.push(math.mode(data[i]).toString());
 	}
 	var table = "<table id='stats-table' class='table'><thead><th>Data</th><th>Mean</th><th>Standard Deviation</th><th>Median</th><th>Mode</th></thead><tbody>";
@@ -401,7 +401,6 @@ function makepdf(table){
 }
 
 function singleCounty(){
-
 	if(finance == null){
 		console.log("Finance is null");
 		$.getJSON("finance.json", function(json){
