@@ -18,7 +18,11 @@ var graph = {
                 text: ''
             }
         },
-        series: []
+        series: [],
+				credits:{
+					href:"http://www.texprotects.org/",
+					text:"Texprotects.org/"
+				}
 	};	
 
 var idDict = {};
