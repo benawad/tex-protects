@@ -134,13 +134,14 @@ $.getJSON("finance.json", function(json){
 $.getJSON("databook.json", function(json){
 	databook = json;
 	loadCheckboxes();
-	var year = "2015";
-	graph.yAxis.title.text = year;
-	graph.xAxis.categories = ["Moore", "Glasscock", "Hall", "Rains", "Nueces"];
-	var columns = ["Hispanic", "Anglo"];
-	graph.xAxis.title.text = "County";
-	graph.series = createSeries(columns);
-	graph.chart.type = "bar";
+	var counties = ["Austin", "Dallas", "Travis", "Tarrant", "State Total"];
+	var years = ["2015", "2014", "2013", "2012", "2011", "2010", "2009"];
+	graph.xAxis.categories = years;
+	var column = "Confirmed Victims of Child Abuse/ Neglect";
+	graph.yAxis.title.text = column;
+	graph.xAxis.title.text = "Year";
+	graph.series = createLineSeries(years, counties, column);
+	graph.chart.type = "line";
 	genGraph();
 
 	// fill column dropdown box
@@ -277,7 +278,7 @@ function saveChanges(){
 	genGraph();
 }
 
-function fillTable(){
+function getTableData(){
 	var rowData = [];
 	var header = [];
 	var caption = graph.yAxis.title.text;
@@ -306,6 +307,14 @@ function fillTable(){
 			rowData.push(single);
 		}
 	}
+	return [rowData, header, caption];
+}
+
+function fillTable(){
+	var info = getTableData();
+	var rowData = info[0];
+	var header = info[1];
+	var caption = info[2];
 
 	var table = "<table id='data-table' class='table table-striped'><caption>" + caption + "</caption>";
 	table += "<thead><tr>" + "<th>County</th><th>Region</th>";
@@ -376,16 +385,33 @@ function makepdf(table){
 			success: function (data) {
 					var url = exportUrl + data;
 					urlToUri(url, function(uri){
+						var info = getTableData();
+						for (var i = 0; i < info[0].length; i++){
+							for(var k = 0; k < info[0][i].length; k++){
+								try{
+									info[0][i][k] = info[0][i][k].toString();		
+								} catch (err){
+									info[0][i][k] = "";
+								}
+							}
+						}
+						info[1].splice(0, 0, "Region");
+						info[1].splice(0, 0, "County");
+						info[0].splice(0, 0, info[1]);
 						var docDefinition = {
 							content: [
 								{
 									image:uri,
 									width:500
 								},
+								{ text: info[2], style: 'subheader'},
+								{
+									table:{
+										body: info[0]
+									}
+								},
 								{
 									table: {
-										//headerRows: 1,
-										//widths: [ '*', 'auto', 100, '*' ],
 										body: rows
 									}
 								}
@@ -409,11 +435,13 @@ function singleCounty(){
 		});
 	} else {
 		cols = Object.keys(finance[0]);
+		cols.sort();
+		cols.reverse();
 		rows = [];
 		for (var i = 0; i < finance.length; i++){
 			var arr = [];
-			for(k in finance[i]){
-				arr.push(finance[i][k]);
+			for(var k = 0; k < cols.length; k++){
+				arr.push(finance[i][cols[k]]);
 			}
 			rows.push(arr);
 		}
