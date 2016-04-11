@@ -37,7 +37,7 @@ function loadCheckboxes(){
 		if(year == "Region" || year == "Outline"){
 			continue;
 		}
-		$("#yearCheckboxes").append("<label class='checkbox-inline'><input onclick='radio(this);' type='checkbox' id='" + year + "' value='" + year + "'>" + year + "</label>")
+		$("#yearCheckboxes").append("<label class='checkbox-inline'><input onclick='' type='checkbox' id='" + year + "' value='" + year + "'>" + year + "</label>")
 	}
 }
 
@@ -86,7 +86,7 @@ function createLineSeries(years, counties, column){
 	for(var i = 0; i < counties.length; i++){
 		var datapoints = [];
 		for(var k = 0; k < years.length; k++){
-			var datapoint = getProp(getObj(years[k], counties[i]), [column])
+			var datapoint = getProp(getObj(years[k], counties[i]), [column]);
 			if(!isNaN(datapoint)){
 				datapoint = datapoint.replace(/%/g, "");
 				datapoints.push(+datapoint);
@@ -162,7 +162,8 @@ $.getJSON("databook.json", function(json){
 		columnData.push({"text":cat, "children":children});
 	}
 	columnSelect = $(".column-select").select2({
-		data: columnData
+		data: columnData,
+		maximumSelectionLength: 1
 	});
 
 	columnSelect.on("select2:select", function(e){
@@ -406,16 +407,24 @@ function makepdf(table){
 								},
 								{ text: info[2], style: 'subheader'},
 								{
+									style: 'tab',
 									table:{
 										body: info[0]
 									}
 								},
 								{
+									style: 'tab',
 									table: {
-										body: rows
+										body: rows,
 									}
 								}
-							] 
+							],
+							styles: {
+								tab:{
+									color:"black",
+									margin: [0, 5, 0, 15]
+								}
+							}	
 						};
 						pdfMake.createPdf(docDefinition).open();
 					});
