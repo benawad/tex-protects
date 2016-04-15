@@ -103,7 +103,6 @@ function statTable(){
 	var means = [];
 	var stds = [];
 	var medians = [];
-	var modes = [];
 	var rowLabels = [];
 	var names = [];
 	var data = [];	
@@ -115,13 +114,12 @@ function statTable(){
 	var dec = 2;
 	for(var i = 0; i < data.length; i++){
 		means.push(math.round(math.mean(data[i]), dec));
-		stds.push(math.round(math.mean(data[i]), dec));
-		medians.push(math.round(math.mean(data[i]), dec));
-		modes.push(math.mode(data[i]).toString());
+		stds.push(math.round(math.std(data[i]), dec));
+		medians.push(math.round(math.median(data[i]), dec));
 	}
-	var table = "<table id='stats-table' class='table'><thead><th>Data</th><th>Mean</th><th>Standard Deviation</th><th>Median</th><th>Mode</th></thead><tbody>";
+	var table = "<table id='stats-table' class='table table-striped'><thead><th>Data</th><th>Mean</th><th>Standard Deviation</th><th>Median</th></thead><tbody>";
 	for(var i = 0; i < rowLabels.length; i++){
-		table += "<tr><td>" + rowLabels[i] + "</td><td>" + means[i] + "</td><td>" + stds[i] + "</td><td>" + medians[i] + "</td><td>" + modes[i] + "</td></tr>";
+		table += "<tr><td>" + rowLabels[i] + "</td><td>" + means[i] + "</td><td>" + stds[i] + "</td><td>" + medians[i] + "</td></tr>";
 	}
 	table += "</tbody></table>";
 	return table;
@@ -135,7 +133,7 @@ $.getJSON("databook.json", function(json){
 	databook = json;
 	loadCheckboxes();
 	var counties = ["Austin", "Dallas", "Travis", "Tarrant", "State Total"];
-	var years = ["2015", "2014", "2013", "2012", "2011", "2010", "2009"];
+	var years = ["2009", "2010", "2011", "2012", "2013", "2014", "2015"];
 	graph.xAxis.categories = years;
 	var column = "Confirmed Victims of Child Abuse/ Neglect";
 	graph.yAxis.title.text = column;
