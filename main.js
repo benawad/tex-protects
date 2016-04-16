@@ -132,7 +132,7 @@ $.getJSON("finance.json", function(json){
 $.getJSON("databook.json", function(json){
 	databook = json;
 	loadCheckboxes();
-	var counties = ["Austin", "Dallas", "Travis", "Tarrant", "State Total"];
+	var counties = ["State Total", "Austin", "Dallas", "Travis", "Tarrant"];
 	var years = ["2009", "2010", "2011", "2012", "2013", "2014", "2015"];
 	graph.xAxis.categories = years;
 	var column = "Confirmed Victims of Child Abuse/ Neglect";
