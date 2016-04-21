@@ -103,6 +103,7 @@ function statTable(){
 	var means = [];
 	var stds = [];
 	var medians = [];
+	var percents = [];
 	var rowLabels = [];
 	var names = [];
 	var data = [];	
@@ -112,14 +113,21 @@ function statTable(){
 	}
 	rowLabels = names;
 	var dec = 2;
+	var total = 0;
 	for(var i = 0; i < data.length; i++){
-		means.push(math.round(math.mean(data[i]), dec));
+		var mean = math.mean(data[i])
+		means.push(math.round(mean, dec));
 		stds.push(math.round(math.std(data[i]), dec));
 		medians.push(math.round(math.median(data[i]), dec));
+		total += mean;	
 	}
-	var table = "<table id='stats-table' class='table table-striped'><thead><th>Data</th><th>Mean</th><th>Standard Deviation</th><th>Median</th></thead><tbody>";
+	for(var i = 0; i < means.length; i++){
+		percents.push(math.round(100*(means[i]/total), dec) + "%")
+	}
+	console.log(percents);
+	var table = "<table id='stats-table' class='table table-striped'><caption>Statistics</caption><thead><th>Data</th><th>Mean</th><th>Standard Deviation</th><th>Median</th><th>Percent</th></thead><tbody>";
 	for(var i = 0; i < rowLabels.length; i++){
-		table += "<tr><td>" + rowLabels[i] + "</td><td>" + means[i] + "</td><td>" + stds[i] + "</td><td>" + medians[i] + "</td></tr>";
+		table += "<tr><td>" + rowLabels[i] + "</td><td>" + means[i] + "</td><td>" + stds[i] + "</td><td>" + medians[i] + "</td><td>" + percents[i] + "</td></tr>";
 	}
 	table += "</tbody></table>";
 	return table;
@@ -132,7 +140,7 @@ $.getJSON("finance.json", function(json){
 $.getJSON("databook.json", function(json){
 	databook = json;
 	loadCheckboxes();
-	var counties = ["State Total", "Austin", "Dallas", "Travis", "Tarrant"];
+	var counties = ["Dallas", "Houston", "Tarrant", "Travis"];
 	var years = ["2009", "2010", "2011", "2012", "2013", "2014", "2015"];
 	graph.xAxis.categories = years;
 	var column = "Confirmed Victims of Child Abuse/ Neglect";
@@ -457,8 +465,49 @@ function singleCounty(){
 	}
 }
 
+function download(filename, text) {
+  var element = document.createElement('a');
+  element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+  element.setAttribute('download', filename);
+
+  element.style.display = 'none';
+  document.body.appendChild(element);
+
+  element.click();
+
+  document.body.removeChild(element);
+}
+
+function currData(){
+	var info = getTableData();
+	var rowData = info[0];
+	var header = info[1];
+	header.unshift("Region");
+	header.unshift("County");
+	var caption = info[2];
+	var text = header.join(", ") + "\n";
+	for (var i = 0; i < rowData.length; i++){
+		text += rowData[i].join(", ") + "\n";
+	}
+	download("county-data.csv", text);
+}
+
+function allData(){
+	var header = Object.keys(databook['2009'][0]);
+	var text = header.join(", ") + "\n";
+	for(var i = 0; i < databook['2015'].length; i++){
+		var row = [];
+		for(var j = 0; j < header.length; j++){
+			row.push(databook['2015'][i][header[j]]);
+		}	
+		text += row.join(", ") + "\n";
+	}
+	download("county-data.csv", text);
+}
+
 function genGraph(){
 	$("#container").highcharts(graph);
 	fillTable();
 	$("#stats-table").replaceWith(statTable());
+	console.log(graph);
 }
