@@ -176,9 +176,19 @@ function statTable(){
 	for(var i = 0; i < means.length; i++){
 		percents.push(math.round(100*(means[i]/total), dec) + "%")
 	}
-	var table = "<table id='stats-table' class='table table-striped'><caption>Statistics</caption><thead><th>Data</th><th>Mean</th><th>Standard Deviation</th><th>Median</th><th>Percent</th></thead><tbody>";
+
+	var percentLabel = "";
+	if(graph.chart.type == 'line'){
+		percentLabel = "<th>Percent</th>";
+	}
+
+	var table = "<table id='stats-table' class='table table-striped'><caption>Statistics</caption><thead><th>Data</th><th>Mean</th><th>Standard Deviation</th><th>Median</th>"+percentLabel+"</thead><tbody>";
 	for(var i = 0; i < rowLabels.length; i++){
-		table += "<tr><td>" + rowLabels[i] + "</td><td>" + means[i] + "</td><td>" + stds[i] + "</td><td>" + medians[i] + "</td><td>" + percents[i] + "</td></tr>";
+		table += "<tr><td>" + rowLabels[i] + "</td><td>" + means[i] + "</td><td>" + stds[i] + "</td><td>" + medians[i] + "</td>";
+		if (graph.chart.type == 'line'){
+			table += "<td>" + percents[i] + "</td>";
+		}
+	 	table += "</tr>";
 	}
 	table += "</tbody></table>";
 	return table;
