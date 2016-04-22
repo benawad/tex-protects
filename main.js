@@ -21,9 +21,61 @@ var graph = {
         series: [],
 				credits:{
 					href:"http://www.texprotects.org/",
-					text:"Texprotects.org/"
+					text:"TexProtects.org/"
 				}
 	};	
+
+var graphColors = [
+						'#3366CC',
+						'#DC3912',
+						'#FF9900',
+						'#109618',
+						'#990099',
+						'#3B3EAC',
+						'#0099C6',
+						'#DD4477',
+						'#66AA00',
+						'#B82E2E',
+						'#316395',
+						'#994499',
+						'#22AA99',
+						'#AAAA11',
+						'#6633CC',
+						'#E67300',
+						'#8B0707',
+						'#329262',
+						'#5574A6',
+						'#3B3EAC'
+						];
+
+Highcharts.theme = {
+    colors: graphColors,
+    title: {
+        style: {
+            color: '#000',
+            font: 'bold 16px "Trebuchet MS", Verdana, sans-serif'
+        }
+    },
+    subtitle: {
+        style: {
+            color: '#666666',
+            font: 'bold 12px "Trebuchet MS", Verdana, sans-serif'
+        }
+    },
+
+    legend: {
+        itemStyle: {
+            font: '9pt Trebuchet MS, Verdana, sans-serif',
+            color: 'black'
+        },
+        itemHoverStyle:{
+            color: 'gray'
+        }   
+    }
+};
+
+// Apply the theme
+Highcharts.setOptions(Highcharts.theme);
 
 var idDict = {};
 var valDict = {};
@@ -191,7 +243,8 @@ $.getJSON("databook.json", function(json){
 			});
 		} else {
 			columnSelect = $(".column-select").select2({
-				data: columnData
+				data: columnData,
+				maximumSelectionLength: 19
 			});
 		}
 	});
@@ -322,6 +375,7 @@ function fillTable(){
 	var rowData = info[0];
 	var header = info[1];
 	var caption = info[2];
+	var first = true;
 
 	var table = "<table id='data-table' class='table table-striped'><caption>" + caption + "</caption>";
 	table += "<thead><tr>" + "<th>County</th><th>Region</th>";
@@ -331,8 +385,14 @@ function fillTable(){
 	table += "</tr></thead><tbody>";
 	for(var i = 0; i < rowData.length; i++){
 		table += "<tr>";
+		first = true;	
 		for(var k = 0; k < rowData[i].length; k++){
-			table += "<td>" + rowData[i][k] + "</td>";
+			if (first){
+				first = false;
+				table += "<td>" + rowData[i][k] + " <span style='color:"+graphColors[i]+";'>&#9632;</span></td>";
+			} else {
+				table += "<td>" + rowData[i][k] + "</td>";
+			}
 		}
 		table += "</tr>";
 	}
