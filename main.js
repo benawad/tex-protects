@@ -121,7 +121,7 @@ function createSeries(columns){
 		var data = [];
 		for(var c = 0; c < counties.length; c++){
 			var datapoint = getProp(countyObs[c], columns[i]);
-			if(!isNaN(datapoint)){
+			if(!isNaN(datapoint) && datapoint != null){
 				datapoint = datapoint.replace(/%/g, "");
 				data.push(+datapoint);
 			} else {
@@ -139,7 +139,7 @@ function createLineSeries(years, counties, column){
 		var datapoints = [];
 		for(var k = 0; k < years.length; k++){
 			var datapoint = getProp(getObj(years[k], counties[i]), [column]);
-			if(!isNaN(datapoint)){
+			if(!isNaN(datapoint) && datapoint != null){
 				datapoint = datapoint.replace(/%/g, "");
 				datapoints.push(+datapoint);
 			} else {
@@ -176,7 +176,6 @@ function statTable(){
 	for(var i = 0; i < means.length; i++){
 		percents.push(math.round(100*(means[i]/total), dec) + "%")
 	}
-	console.log(percents);
 	var table = "<table id='stats-table' class='table table-striped'><caption>Statistics</caption><thead><th>Data</th><th>Mean</th><th>Standard Deviation</th><th>Median</th><th>Percent</th></thead><tbody>";
 	for(var i = 0; i < rowLabels.length; i++){
 		table += "<tr><td>" + rowLabels[i] + "</td><td>" + means[i] + "</td><td>" + stds[i] + "</td><td>" + medians[i] + "</td><td>" + percents[i] + "</td></tr>";
@@ -387,7 +386,7 @@ function fillTable(){
 		table += "<tr>";
 		first = true;	
 		for(var k = 0; k < rowData[i].length; k++){
-			if (first){
+			if (first && graph.chart.type == "line"){
 				first = false;
 				table += "<td>" + rowData[i][k] + " <span style='color:"+graphColors[i]+";'>&#9632;</span></td>";
 			} else {
@@ -569,5 +568,4 @@ function genGraph(){
 	$("#container").highcharts(graph);
 	fillTable();
 	$("#stats-table").replaceWith(statTable());
-	console.log(graph);
 }
