@@ -433,19 +433,6 @@ function table(data, id, caption){
 	return html;
 }
 
-function download(filename, text) {
-  var element = document.createElement('a');
-  element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
-  element.setAttribute('download', filename);
-
-  element.style.display = 'none';
-  document.body.appendChild(element);
-
-  element.click();
-
-  document.body.removeChild(element);
-}
-
 function currData(){
 	var info = getTableData();
 	var rowData = info[0];
@@ -457,20 +444,35 @@ function currData(){
 	for (var i = 0; i < rowData.length; i++){
 		text += rowData[i].join(", ") + "\n";
 	}
-	download("county-data.csv", text);
+  var zip = new JSZip();
+	zip.file("county-data.csv", text);
+	zip.generateAsync({type:"blob"}).then(function (blob) {
+    saveAs(blob, "county-data.zip");
+	});
 }
 
 function allData(){
 	var header = Object.keys(databook['2009'][0]);
+	var years = Object.keys(databook);
 	var text = header.join(", ") + "\n";
-	for(var i = 0; i < databook['2015'].length; i++){
-		var row = [];
-		for(var j = 0; j < header.length; j++){
-			row.push(databook['2015'][i][header[j]]);
-		}	
-		text += row.join(", ") + "\n";
+	var zip = new JSZip();
+	var folder = zip.folder("county-data");
+	for (var k = 0; k < years.length; k++){
+		if (years[k] == "Outline" || years[k] == "Region" ){
+			continue;
+		}
+		for(var i = 0; i < databook[years[k]].length; i++){
+			var row = [];
+			for(var j = 0; j < header.length; j++){
+				row.push(databook[years[k]][i][header[j]]);
+			}	
+			text += row.join(", ") + "\n";
+		}
+		folder.file(years[k]+".csv", text);
 	}
-	download("county-data.csv", text);
+	zip.generateAsync({type:"blob"}).then(function (blob) {
+		saveAs(blob, "county-data.zip");
+	});
 }
 
 function genGraph(){
