@@ -1,7 +1,5 @@
 var databook;
 var finance;
-var means = [];
-var currCounties = [];
 var graph = {
 				chart: {
             type: ''
@@ -26,45 +24,6 @@ var graph = {
 					text:"TexProtects.org/"
 				}
 };	
-var pieVisible = false;
-var pie = {
-				chart: {
-            plotBackgroundColor: null,
-            plotBorderWidth: null,
-            plotShadow: false,
-            type: 'pie'
-        },
-        title: {
-            text: ''
-        },
-				tooltip: {
-            pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
-        },
-				plotOptions: {
-            pie: {
-                allowPointSelect: true,
-                cursor: 'pointer',
-                dataLabels: {
-                    enabled: true,
-                    format: '<b>{point.name}</b>: {point.percentage:.1f} %',
-                    style: {
-                        color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
-                    }
-                }
-            }
-        },
-				series: [{
-            name: 'Percent',
-            colorByPoint: true,
-            data: []
-        },
-				],
-				credits:{
-					href:"http://www.texprotects.org/",
-					text:"TexProtects.org/"
-				}
-};
-
 var graphColors = [
 						'#3366CC',
 						'#DC3912',
@@ -192,7 +151,7 @@ function createLineSeries(years, counties, column){
 }
 
 function statTable(){
-	means = [];
+	var means = [];
 	var stds = [];
 	var medians = [];
 	var percents = [];
@@ -221,7 +180,6 @@ function statTable(){
 	if(graph.chart.type == 'line'){
 		percentLabel = "<th>Percent</th>";
 	}
-	currCounties = rowLabels;
 
 	var table = "<table id='stats-table' class='table table-striped'><caption>Statistics</caption><thead><th>Data</th><th>Mean</th><th>Standard Deviation</th><th>Median</th>"+percentLabel+"</thead><tbody>";
 	for(var i = 0; i < rowLabels.length; i++){
@@ -447,6 +405,7 @@ function fillTable(){
 		table += "</tr>";
 	}
 	table += "</tr></tbody></table>";
+	sessionStorage.setItem('table', table);
 	$("#data-table").replaceWith(table);
 }
 
@@ -472,107 +431,6 @@ function table(data, id, caption){
 	html += "</tbody>";
 	html += "</table>";
 	return html;
-}
-
-function urlToUri(url, callback){
-    var img = new Image();
-    img.crossOrigin = 'Anonymous';
-    img.onload = function(){
-        var canvas = document.createElement('CANVAS');
-        var ctx = canvas.getContext('2d');
-        var dataURL;
-        canvas.height = this.height;
-        canvas.width = this.width;
-        ctx.drawImage(this, 0, 0);
-        dataURL = canvas.toDataURL("JPEG");
-        callback(dataURL);
-        canvas = null; 
-    };
-    img.src = url;
-}
-
-function makepdf(table){
-	var exportUrl = 'http://export.highcharts.com/';
-	var optionsStr = JSON.stringify(graph);
-  dataString = encodeURI('async=true&type=SVG&width=500&options=' + optionsStr);
-	$.ajax({
-			type: 'POST',
-			data: dataString,
-			url: exportUrl,
-			success: function (data) {
-					var url = exportUrl + data;
-					urlToUri(url, function(uri){
-						var info = getTableData();
-						for (var i = 0; i < info[0].length; i++){
-							for(var k = 0; k < info[0][i].length; k++){
-								try{
-									info[0][i][k] = info[0][i][k].toString();		
-								} catch (err){
-									info[0][i][k] = "";
-								}
-							}
-						}
-						info[1].splice(0, 0, "Region");
-						info[1].splice(0, 0, "County");
-						info[0].splice(0, 0, info[1]);
-						var docDefinition = {
-							content: [
-								{
-									image:uri,
-									width:500
-								},
-								{ text: info[2], style: 'subheader'},
-								{
-									style: 'tab',
-									table:{
-										body: info[0]
-									}
-								},
-								{
-									style: 'tab',
-									table: {
-										body: rows,
-									}
-								}
-							],
-							styles: {
-								tab:{
-									color:"black",
-									margin: [0, 5, 0, 15]
-								}
-							}	
-						};
-						pdfMake.createPdf(docDefinition).open();
-					});
-			},
-			error: function (err) {
-					console.log('error', err.statusText);
-			}
-	});
-}
-
-function singleCounty(){
-	if(finance == null){
-		console.log("Finance is null");
-		$.getJSON("finance.json", function(json){
-			finance = json;
-			singleCounty();
-		});
-	} else {
-		cols = Object.keys(finance[0]);
-		cols.sort();
-		cols.reverse();
-		rows = [];
-		for (var i = 0; i < finance.length; i++){
-			var arr = [];
-			for(var k = 0; k < cols.length; k++){
-				arr.push(finance[i][cols[k]]);
-			}
-			rows.push(arr);
-		}
-		rows.splice(0, 0, cols);
-		makepdf(rows);
-	}
 }
 
 function download(filename, text) {
@@ -615,28 +473,8 @@ function allData(){
 	download("county-data.csv", text);
 }
 
-function togglePie(){
-	if(pieVisible){
-		$("#container").highcharts(graph);
-		pieVisible = false;
-	}	else {
-		pieVisible = true;
-		pie.title.text = graph.yAxis.title.text;
-		var data = [];
-		for (var i = 0; i < means.length; i++){
-			data.push({"name":currCounties[i], "y":means[i]});
-		}
-		pie.series[0].data = data;
-		$("#container").empty();
-		for(var i = 0; i < 4; i++){
-			$("#container").append('<div id="pie'+(i+1)+'" class="col-md-3"></div>');
-			$("#pie" + (i+1)).highcharts(pie);
-		}
-		//$("#container").highcharts(pie);
-	}
-}
-
 function genGraph(){
+	sessionStorage.setItem('graph', JSON.stringify(graph));
 	$("#container").highcharts(graph);
 	fillTable();
 	$("#stats-table").replaceWith(statTable());
