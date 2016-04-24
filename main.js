@@ -1,5 +1,7 @@
 var databook;
 var finance;
+var means = [];
+var currCounties = [];
 var graph = {
 				chart: {
             type: ''
@@ -23,7 +25,45 @@ var graph = {
 					href:"http://www.texprotects.org/",
 					text:"TexProtects.org/"
 				}
-	};	
+};	
+var pieVisible = false;
+var pie = {
+				chart: {
+            plotBackgroundColor: null,
+            plotBorderWidth: null,
+            plotShadow: false,
+            type: 'pie'
+        },
+        title: {
+            text: ''
+        },
+				tooltip: {
+            pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+        },
+				plotOptions: {
+            pie: {
+                allowPointSelect: true,
+                cursor: 'pointer',
+                dataLabels: {
+                    enabled: true,
+                    format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                    style: {
+                        color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                    }
+                }
+            }
+        },
+				series: [{
+            name: 'Percent',
+            colorByPoint: true,
+            data: []
+        },
+				],
+				credits:{
+					href:"http://www.texprotects.org/",
+					text:"TexProtects.org/"
+				}
+};
 
 var graphColors = [
 						'#3366CC',
@@ -152,7 +192,7 @@ function createLineSeries(years, counties, column){
 }
 
 function statTable(){
-	var means = [];
+	means = [];
 	var stds = [];
 	var medians = [];
 	var percents = [];
@@ -181,6 +221,7 @@ function statTable(){
 	if(graph.chart.type == 'line'){
 		percentLabel = "<th>Percent</th>";
 	}
+	currCounties = rowLabels;
 
 	var table = "<table id='stats-table' class='table table-striped'><caption>Statistics</caption><thead><th>Data</th><th>Mean</th><th>Standard Deviation</th><th>Median</th>"+percentLabel+"</thead><tbody>";
 	for(var i = 0; i < rowLabels.length; i++){
@@ -572,6 +613,27 @@ function allData(){
 		text += row.join(", ") + "\n";
 	}
 	download("county-data.csv", text);
+}
+
+function togglePie(){
+	if(pieVisible){
+		$("#container").highcharts(graph);
+		pieVisible = false;
+	}	else {
+		pieVisible = true;
+		pie.title.text = graph.yAxis.title.text;
+		var data = [];
+		for (var i = 0; i < means.length; i++){
+			data.push({"name":currCounties[i], "y":means[i]});
+		}
+		pie.series[0].data = data;
+		$("#container").empty();
+		for(var i = 0; i < 4; i++){
+			$("#container").append('<div id="pie'+(i+1)+'" class="col-md-3"></div>');
+			$("#pie" + (i+1)).highcharts(pie);
+		}
+		//$("#container").highcharts(pie);
+	}
 }
 
 function genGraph(){
