@@ -409,30 +409,6 @@ function fillTable(){
 	$("#data-table").replaceWith(table);
 }
 
-function table(data, id, caption){
-	var html = "<table id='"+id+"' class='table'>";
-	if(caption){
-		html += "<caption>" + caption + "</caption>";
-	}
-	html += "<thead><tr>";
-	var keys = Object.keys(data[0]);
-	for(var i = 0; i < keys.length; i++){
-		html += "<th>" + keys[i] + "</th>";	
-	}
-	html += "</tr></thead>";
-	html += "<tbody>";
-	for(var i = 0; i < data.length; i++){
-		html += "<tr>";
-		for(var j = 0; j < keys.length; j++){
-			html += "<td>" + data[i][keys[j]] + "</td>";
-		}
-		html +="</tr>";
-	}
-	html += "</tbody>";
-	html += "</table>";
-	return html;
-}
-
 function currData(){
 	var info = getTableData();
 	var rowData = info[0];

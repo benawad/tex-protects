@@ -53,3 +53,44 @@ console.log(graph);
 $("#container").highcharts(graph);
 var table = sessionStorage.getItem("table");
 $("#data-table").replaceWith(table);
+
+function makeTable(data, id, caption){
+	var html = "<table id='"+id+"' class='table table-striped'>";
+	if(caption){
+		html += "<caption>" + caption + "</caption>";
+	}
+	html += "<thead><tr>";
+	var keys = Object.keys(data[0]);
+	for(var j = 0; j < keys.length; j++){
+		html += "<th>" + data[0][keys[j]] + "</th>";
+	}
+	html += "</tr></thead>";
+	html += "<tbody>";
+	for(var i = 1; i < data.length; i++){
+		html += "<tr>";
+		for(var j = 0; j < keys.length; j++){
+			html += "<td>" + data[i][keys[j]] + "</td>";
+		}
+		html +="</tr>";
+	}
+	html += "</tbody>";
+	html += "</table>";
+	return html;
+}
+
+$.getJSON("finance.json", function(finance){
+	$("#finance").empty();
+	cols = Object.keys(finance[0]);
+	cols.sort();
+	cols.reverse();
+	rows = [];
+	for (var i = 0; i < finance.length; i++){
+		var arr = [];
+		for(var k = 0; k < cols.length; k++){
+			arr.push(finance[i][cols[k]]);
+		}
+		rows.push(arr);
+	}
+	rows.splice(0, 0, cols);
+	$("#finance").append(makeTable(rows, "", ""));
+});
