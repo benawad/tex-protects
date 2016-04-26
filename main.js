@@ -153,7 +153,6 @@ function createLineSeries(years, counties, column){
 function statTable(){
 	var means = [];
 	var stds = [];
-	var medians = [];
 	var percents = [];
 	var rowLabels = [];
 	var names = [];
@@ -169,7 +168,6 @@ function statTable(){
 		var mean = math.mean(data[i])
 		means.push(math.round(mean, dec));
 		stds.push(math.round(math.std(data[i]), dec));
-		medians.push(math.round(math.median(data[i]), dec));
 		total += mean;	
 	}
 	for(var i = 0; i < means.length; i++){
@@ -181,9 +179,9 @@ function statTable(){
 		percentLabel = "<th>Percent</th>";
 	}
 
-	var table = "<table id='stats-table' class='table table-striped'><caption>Statistics</caption><thead><th>Data</th><th>Mean</th><th>Standard Deviation</th><th>Median</th>"+percentLabel+"</thead><tbody>";
+	var table = "<table id='stats-table' class='table table-striped'><caption>Statistics</caption><thead><th>Data</th><th>Mean</th><th>Standard Deviation</th>"+percentLabel+"</thead><tbody>";
 	for(var i = 0; i < rowLabels.length; i++){
-		table += "<tr><td>" + rowLabels[i] + "</td><td>" + means[i] + "</td><td>" + stds[i] + "</td><td>" + medians[i] + "</td>";
+		table += "<tr><td>" + rowLabels[i] + "</td><td>" + means[i] + "</td><td>" + stds[i] + "</td>";
 		if (graph.chart.type == 'line'){
 			table += "<td>" + percents[i] + "</td>";
 		}
