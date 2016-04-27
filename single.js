@@ -48,9 +48,10 @@ Highcharts.theme = {
 };
 Highcharts.setOptions(Highcharts.theme);
 
-var graph =	$.parseJSON(sessionStorage.getItem('graph'));
-console.log(graph);
+var graph = $.parseJSON(sessionStorage.getItem('graph'));
 $("#container").highcharts(graph);
+var statsTable = sessionStorage.getItem('statsTable');
+$("#stats-table").replaceWith(statsTable);
 var table = sessionStorage.getItem("table");
 $("#data-table").replaceWith(table);
 
@@ -61,14 +62,14 @@ function makeTable(data, id, caption){
 	}
 	html += "<thead><tr>";
 	var keys = Object.keys(data[0]);
-	for(var j = 0; j < keys.length; j++){
+	for(var j = 0; j < 2; j++){
 		html += "<th>" + data[0][keys[j]] + "</th>";
 	}
 	html += "</tr></thead>";
 	html += "<tbody>";
 	for(var i = 1; i < data.length; i++){
 		html += "<tr>";
-		for(var j = 0; j < keys.length; j++){
+		for(var j = 0; j < 2; j++){
 			html += "<td>" + data[i][keys[j]] + "</td>";
 		}
 		html +="</tr>";

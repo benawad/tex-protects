@@ -150,13 +150,18 @@ function createLineSeries(years, counties, column){
 	return series;
 }
 
-function statTable(){
+function statTable(wantRates){
 	var means = [];
 	var stds = [];
 	var percents = [];
 	var rowLabels = [];
 	var names = [];
 	var data = [];	
+	var rates = [];
+	var years = [];
+	if(graph.chart.type == 'line'){
+		years = graph.xAxis.categories;
+	}
 	for(var i = 0; i < graph.series.length; i ++){
 		names.push(graph.series[i].name);
 		data.push(graph.series[i].data);
@@ -165,6 +170,27 @@ function statTable(){
 	var dec = 2;
 	var total = 0;
 	for(var i = 0; i < data.length; i++){
+		var ratesRow = [];
+		if(graph.chart.type == 'line'){
+			var pop = getProp(getObj(years[i], names[i]), "Child Population");
+			for(var k = 0; k < data[i].length; k++){
+				if(pop != null){
+					ratesRow.push(math.round((data[i][k] / pop)*100, 2) + "%");	
+				} else {
+					ratesRow.push("No data");
+				}
+			}
+		} else {
+			var pop = getProp(getObj(graph.yAxis.title.text, graph.xAxis.categories[i]), "Child Population");
+			for(var k = 0; k < data[i].length; k++){
+				if(pop != null){
+					ratesRow.push(math.round((data[i][k] / pop)*100, 2) + "%");	
+				} else {
+					ratesRow.push("No data");
+				}
+			}
+		}
+		rates.push(ratesRow);
 		var mean = math.mean(data[i])
 		means.push(math.round(mean, dec));
 		stds.push(math.round(math.std(data[i]), dec));
@@ -179,16 +205,35 @@ function statTable(){
 		percentLabel = "<th>Percent</th>";
 	}
 
-	var table = "<table id='stats-table' class='table table-striped'><caption>Statistics</caption><thead><th>Data</th><th>Mean</th><th>Standard Deviation</th>"+percentLabel+"</thead><tbody>";
+	var table = "<div id='stats-div'><table id='stats-table' class='table table-striped'><h4 class='text-center'>Statistics</h4><thead><th>Data</th><th>Mean</th><th>Standard Deviation</th>"+percentLabel+"</thead><tbody>";
+	var ratesTable = "<div id='stats-div'><table id='stats-table' class='table table-striped'><h4 class='text-center'>Statistics</h4><thead><th>Data</th><th>Mean</th><th>Standard Deviation</th>"+percentLabel;
+	for(var i = 0; i < graph.xAxis.categories.length; i++){
+		ratesTable += "<th>";
+		ratesTable += graph.xAxis.categories[i] + " Rates";
+		ratesTable += "</th>";
+	}
+	ratesTable += "</thead><tbody>";
 	for(var i = 0; i < rowLabels.length; i++){
 		table += "<tr><td>" + rowLabels[i] + "</td><td>" + means[i] + "</td><td>" + stds[i] + "</td>";
+		ratesTable += "<tr><td>" + rowLabels[i] + "</td><td>" + means[i] + "</td><td>" + stds[i] + "</td>";
 		if (graph.chart.type == 'line'){
 			table += "<td>" + percents[i] + "</td>";
+			ratesTable += "<td>" + percents[i] + "</td>";
+		}
+		for(var k = 0; k < rates[i].length; k++){
+			ratesTable += "<td>" + rates[i][k] + "</td>";
 		}
 	 	table += "</tr>";
+	 	ratesTable += "</tr>";
 	}
-	table += "</tbody></table>";
-	return table;
+	table += "</tbody></table></div>";
+	ratesTable += "</tbody></table></div>";
+	sessionStorage.setItem('statsTable', ratesTable);
+	if(wantRates){
+		return ratesTable;
+	} else {
+		return table;
+	}
 }
 
 $.getJSON("finance.json", function(json){
@@ -383,7 +428,7 @@ function fillTable(){
 	var caption = info[2];
 	var first = true;
 
-	var table = "<table id='data-table' class='table table-striped'><caption>" + caption + "</caption>";
+	var table = "<div id='data-div'><table id='data-table' class='table table-striped'><h4 class='text-center'>" + caption + "</h4>";
 	table += "<thead><tr>" + "<th>County</th><th>Region</th>";
 	for(var i = 0; i < header.length; i++){
 		table += "<th>" + header[i] + "</th>";
@@ -402,9 +447,9 @@ function fillTable(){
 		}
 		table += "</tr>";
 	}
-	table += "</tr></tbody></table>";
+	table += "</tr></tbody></table></div>";
 	sessionStorage.setItem('table', table);
-	$("#data-table").replaceWith(table);
+	$("#data-div").replaceWith(table);
 }
 
 function currData(){
@@ -453,5 +498,5 @@ function genGraph(){
 	sessionStorage.setItem('graph', JSON.stringify(graph));
 	$("#container").highcharts(graph);
 	fillTable();
-	$("#stats-table").replaceWith(statTable());
+	$("#stats-div").replaceWith(statTable(false));
 }
