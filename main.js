@@ -164,9 +164,13 @@ function statTable(wantRates){
 	}
 	for(var i = 0; i < graph.series.length; i ++){
 		names.push(graph.series[i].name);
+		if(graph.chart.type == 'line'){
+			rowLabels.push(graph.series[i].name + " <span style='color:"+graphColors[i]+";'>&#9632;</span>");
+		} else {
+			rowLabels.push(graph.series[i].name);
+		}
 		data.push(graph.series[i].data);
 	}
-	rowLabels = names;
 	var dec = 2;
 	var total = 0;
 	for(var i = 0; i < data.length; i++){
