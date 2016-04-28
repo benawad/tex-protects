@@ -49,6 +49,13 @@ Highcharts.theme = {
 Highcharts.setOptions(Highcharts.theme);
 
 var graph = $.parseJSON(sessionStorage.getItem('graph'));
+graph['legend'] = {
+	itemStyle: {
+		font: '14pt Trebuchet MS, Verdana, sans-serif'
+	},
+	verticalAlign: 'top'
+};
+console.log(graph);
 $("#container").highcharts(graph);
 var statsTable = sessionStorage.getItem('statsTable');
 $("#stats-table").replaceWith(statsTable);

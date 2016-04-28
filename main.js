@@ -1,7 +1,7 @@
 var databook;
 var finance;
 var graph = {
-				chart: {
+	chart: {
             type: ''
         },
         title: {
@@ -80,7 +80,9 @@ var idDict = {};
 var valDict = {};
 
 //Select2
-var countySelect = $(".county-select").select2();
+var countySelect = $(".county-select").select2({
+	maximumSelectionLength: 3
+});
 var columnSelect = null;
 
 function loadCheckboxes(){
@@ -247,7 +249,7 @@ $.getJSON("finance.json", function(json){
 $.getJSON("databook.json", function(json){
 	databook = json;
 	loadCheckboxes();
-	var counties = ["Dallas", "Houston", "Tarrant", "Travis"];
+	var counties = ["Dallas", "Collin"];
 	var years = ["2009", "2010", "2011", "2012", "2013", "2014", "2015"];
 	graph.xAxis.categories = years;
 	var column = "Confirmed Victims of Child Abuse/ Neglect";
