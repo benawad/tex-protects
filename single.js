@@ -49,6 +49,9 @@ Highcharts.theme = {
 Highcharts.setOptions(Highcharts.theme);
 
 var graph = $.parseJSON(sessionStorage.getItem('graph'));
+if(graph == null){
+	graph = $.parseJSON(sessionStorage.getItem('graph'));
+}
 graph['legend'] = {
 	itemStyle: {
 		font: '14pt Trebuchet MS, Verdana, sans-serif'
@@ -58,8 +61,14 @@ graph['legend'] = {
 console.log(graph);
 $("#container").highcharts(graph);
 var statsTable = sessionStorage.getItem('statsTable');
+if (statsTable == null){
+	statsTable = sessionStorage.getItem('statsTable');
+}
 $("#stats-table").replaceWith(statsTable);
 var table = sessionStorage.getItem("table");
+if (table == null){
+	table = sessionStorage.getItem("table");
+}
 $("#data-table").replaceWith(table);
 
 function makeTable(data, id, caption){
